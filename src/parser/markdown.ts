@@ -309,6 +309,14 @@ function tokenToElement(token: Token): SlideElement | null {
 
     case 'code': {
       const codeToken = token as Tokens.Code;
+      // mermaid記法の場合は別タイプとして扱う
+      if (codeToken.lang === 'mermaid') {
+        return {
+          type: 'mermaid',
+          content: codeToken.text,
+          raw: codeToken.raw,
+        };
+      }
       return {
         type: 'code',
         content: codeToken.text,

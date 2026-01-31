@@ -1,8 +1,8 @@
-# md2ppt 仕様書
+# mashup 仕様書
 
 ## 1. 概要
 
-md2pptは、Markdownファイルからグリッドベースのレイアウト指定でPowerPoint (PPTX) を生成するCLIツールです。
+mashupは、Markdownファイルからグリッドベースのレイアウト指定でPowerPoint (PPTX) を生成するCLIツールです。
 
 ### 1.1 主な機能
 
@@ -166,8 +166,7 @@ layout: プリセット名
 | 順序付きリスト | `1.`, `2.`, ... | ✅ |
 | 画像 | `![alt](path)` | ✅ |
 | テーブル | `\| ... \|` | ✅ |
-| コードブロック | ` ``` ` | ✅ |
-| 引用 | `>` | ✅ |
+| コードブロック | ` ``` ` | ✅ || Mermaid図 | ` ```mermaid ` | ✅ || 引用 | `>` | ✅ |
 | 太字 | `**text**` | ✅ |
 | 斜体 | `*text*` | ✅ |
 | リンク | `[text](url)` | ✅ |
@@ -219,6 +218,7 @@ h = (rowEnd - rowStart + 1) * cellHeight
 | table | 3（行数により調整） |
 | code | 3 |
 | blockquote | 2 |
+| mermaid | 4 |
 
 ### 4.3 動的高さ調整
 
@@ -259,7 +259,7 @@ h = (rowEnd - rowStart + 1) * cellHeight
 ### 6.1 コマンド構文
 
 ```
-md2ppt [options] <input>
+mashup [options] <input>
 ```
 
 ### 6.2 引数
@@ -283,13 +283,13 @@ md2ppt [options] <input>
 
 ```bash
 # 基本的な変換
-md2ppt input.md -o output.pptx
+mashup input.md -o output.pptx
 
 # テーマを指定
-md2ppt input.md -o output.pptx --theme corporate
+mashup input.md -o output.pptx --theme corporate
 
 # 監視モード
-md2ppt input.md -o output.pptx --watch
+mashup input.md -o output.pptx --watch
 ```
 
 ## 7. プログラムAPI仕様
@@ -298,10 +298,10 @@ md2ppt input.md -o output.pptx --watch
 
 ```typescript
 // Markdown文字列からPPTX生成
-function md2ppt(markdown: string, options: ConvertOptions): Promise<void>
+function mashup(markdown: string, options: ConvertOptions): Promise<void>
 
 // ファイルからPPTX生成
-function md2pptFile(inputPath: string, options: ConvertOptions): Promise<void>
+function mashupFile(inputPath: string, options: ConvertOptions): Promise<void>
 ```
 
 ### 7.2 ConvertOptions型
@@ -342,7 +342,7 @@ interface StyleOptions {
 
 ```typescript
 interface SlideElement {
-  type: 'heading' | 'paragraph' | 'list' | 'image' | 'table' | 'code' | 'blockquote';
+  type: 'heading' | 'paragraph' | 'list' | 'image' | 'table' | 'code' | 'blockquote' | 'mermaid';
   content: string | ListItem[] | TableData;
   level?: number;           // 見出しレベル（h1=1, h2=2, ...）
   position?: GridPosition;  // 省略時は自動配置
@@ -490,9 +490,10 @@ grid: 12x9
 | marked | 11.x | Markdownパース |
 | yaml | 2.x | Front Matterパース |
 | commander | 12.x | CLIフレームワーク |
+| @mermaid-js/mermaid-cli | latest | Mermaid図の画像変換 |
 | vitest | 1.x | テストフレームワーク |
 | typescript | 5.x | 言語 |
 
 ---
 
-*このドキュメントはmd2ppt v0.1.0の仕様を記述しています。*
+*このドキュメントはmashup v0.1.0の仕様を記述しています。*

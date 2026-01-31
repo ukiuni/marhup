@@ -13,6 +13,7 @@ import { addImageElement } from './image.js';
 import { addTableElement } from './table.js';
 import { addListElement } from './list.js';
 import { addCodeElement } from './code.js';
+import { addMermaidElement } from './mermaid.js';
 
 // スライドサイズ（インチ）- 16:9
 const SLIDE_SIZE = { width: 10, height: 5.625 };
@@ -31,7 +32,7 @@ export async function generatePptx(
   // プレゼンテーション設定
   pptx.layout = 'LAYOUT_16x9';
   pptx.title = document.globalFrontmatter.title || 'Presentation';
-  pptx.author = 'md2ppt';
+  pptx.author = 'mashup';
 
   // グローバルグリッド設定
   const globalGridStr = document.globalFrontmatter.grid || '12x9';
@@ -49,7 +50,7 @@ export async function generatePptx(
 
     // 要素を配置
     for (const element of layout.elements) {
-      addElement(pptxSlide, element, slideGrid, basePath);
+      await addElement(pptxSlide, element, slideGrid, basePath);
     }
   }
 
@@ -60,12 +61,12 @@ export async function generatePptx(
 /**
  * 要素をスライドに追加
  */
-function addElement(
+async function addElement(
   slide: PptxGenJS.Slide,
   element: PlacedElement,
   grid: GridConfig,
   basePath?: string
-): void {
+): Promise<void> {
   // グリッド位置を座標に変換
   const coords = gridToCoordinates(element.position, grid, SLIDE_SIZE, MARGIN);
 
@@ -102,6 +103,10 @@ function addElement(
 
     case 'blockquote':
       addTextElement(slide, element, coords, { ...styleProps, italic: true });
+      break;
+
+    case 'mermaid':
+      await addMermaidElement(slide, element, coords, styleProps);
       break;
 
     default:

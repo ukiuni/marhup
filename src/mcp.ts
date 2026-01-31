@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * md2ppt MCP Server
- * Model Context Protocol サーバーとしてmd2ppt機能を提供
+ * mashup MCP Server
+ * Model Context Protocol サーバーとしてmashup機能を提供
  */
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
@@ -14,7 +14,7 @@ import { getToolDefinitions, handleToolCall } from './mcp-handlers.js';
 
 const server = new Server(
   {
-    name: 'md2ppt',
+    name: 'mashup',
     version: '0.1.0',
   },
   {
@@ -44,7 +44,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error('md2ppt MCP server started');
+  console.error('mashup MCP server started');
 }
 
 main().catch((error) => {

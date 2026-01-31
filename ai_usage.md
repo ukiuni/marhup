@@ -1,6 +1,6 @@
-# md2ppt用Markdown生成ガイド（LLM向け）
+# mashup用Markdown生成ガイド（LLM向け）
 
-このドキュメントは、LLMがmd2pptコマンドで変換可能なMarkdownを生成するためのガイドです。
+このドキュメントは、LLMがmashupコマンドで変換可能なMarkdownを生成するためのガイドです。
 
 ## クイックリファレンス
 

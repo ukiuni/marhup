@@ -1,9 +1,9 @@
 ---
-title: md2ppt サンプルプレゼンテーション
+title: mashup サンプルプレゼンテーション
 grid: 12x9
 ---
 
-# md2ppt デモ [1-12, 4]
+# mashup デモ [1-12, 4]
 
 グリッドベースレイアウトで PowerPoint を生成 [1-12, 6] {.center}
 
@@ -54,7 +54,7 @@ grid: 12x9
 # まとめ [1-12, 1]
 
 [1-12, 3-7]
-## md2ppt の特徴
+## mashup の特徴
 
 1. **直感的なグリッド指定** - `[1-6, 2-8]` 形式で簡単レイアウト
 2. **Markdown互換** - 既存のMarkdown知識がそのまま使える
@@ -95,3 +95,29 @@ grid: 12x9
 - 縦横比 1:2
 - 全幅で配置すると迫力が出る
 - 下にキャプションやテキストを配置
+
+---
+
+# Mermaid図の例 [1-12, 1]
+
+[1-6, 2-8]
+```mermaid
+graph TD
+    A[Markdown] --> B[Parser]
+    B --> C[Layout Engine]
+    C --> D[PPTX Generator]
+    D --> E[output.pptx]
+```
+
+[7-12, 2-5]
+## フローチャート
+- Mermaid記法で図を描画
+- 自動的に画像に変換
+- PowerPointに埋め込み
+
+[7-12, 6-8]
+### 対応図形
+- flowchart / graph
+- sequence diagram
+- class diagram
+- 他多数

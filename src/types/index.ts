@@ -1,5 +1,5 @@
 /**
- * md2ppt 型定義
+ * mashup 型定義
  */
 
 // グリッド位置
@@ -38,7 +38,8 @@ export type ElementType =
   | 'image'
   | 'table'
   | 'code'
-  | 'blockquote';
+  | 'blockquote'
+  | 'mermaid';
 
 // スライド要素
 export interface SlideElement {
@@ -130,4 +131,5 @@ export const DEFAULT_ELEMENT_HEIGHT: Record<ElementType, number> = {
   table: 3,
   code: 3,
   blockquote: 2,
+  mermaid: 4,
 };

@@ -8,7 +8,7 @@ import * as path from 'path';
 import * as os from 'os';
 import {
   getToolDefinitions,
-  getMd2pptGuide,
+  getMashupGuide,
   handleToolCall,
 } from '../../src/mcp-handlers.js';
 
@@ -37,20 +37,20 @@ describe('MCP Tools', () => {
       expect(tool?.inputSchema.required).toContain('outputPath');
     });
 
-    it('get_md2ppt_guideツールが定義されている', () => {
+    it('get_mashup_guideツールが定義されている', () => {
       const tools = getToolDefinitions();
-      const tool = tools.find((t) => t.name === 'get_md2ppt_guide');
+      const tool = tools.find((t) => t.name === 'get_mashup_guide');
 
       expect(tool).toBeDefined();
       expect(tool?.inputSchema.required).toHaveLength(0);
     });
   });
 
-  describe('getMd2pptGuide', () => {
+  describe('getMashupGuide', () => {
     it('ガイド文字列を返す', () => {
-      const guide = getMd2pptGuide();
+      const guide = getMashupGuide();
 
-      expect(guide).toContain('md2ppt Markdown記法ガイド');
+      expect(guide).toContain('mashup Markdown記法ガイド');
       expect(guide).toContain('グリッド座標系');
       expect(guide).toContain('[1-12, 1]');
     });
@@ -60,20 +60,20 @@ describe('MCP Tools', () => {
     let tempDir: string;
 
     beforeEach(() => {
-      tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'md2ppt-test-'));
+      tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'mashup-test-'));
     });
 
     afterEach(() => {
       fs.rmSync(tempDir, { recursive: true, force: true });
     });
 
-    describe('get_md2ppt_guide', () => {
+    describe('get_mashup_guide', () => {
       it('ガイドを返す', async () => {
-        const result = await handleToolCall('get_md2ppt_guide', {});
+        const result = await handleToolCall('get_mashup_guide', {});
 
         expect(result.isError).toBeUndefined();
         expect(result.content).toHaveLength(1);
-        expect(result.content[0].text).toContain('md2ppt Markdown記法ガイド');
+        expect(result.content[0].text).toContain('mashup Markdown記法ガイド');
       });
     });
 

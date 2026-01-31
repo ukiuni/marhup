@@ -1,4 +1,4 @@
-# md2ppt
+# mashup
 
 Markdownからグリッドベースのレイアウトで PowerPoint (PPTX) を生成するCLIツール
 
@@ -8,24 +8,25 @@ Markdownからグリッドベースのレイアウトで PowerPoint (PPTX) を�
 - 🎯 **シンプルな記法** - 位置指定は省略可能、自動レイアウト
 - 🎨 **スタイル指定** - クラスベースの柔軟なスタイリング
 - 📝 **Markdown完全互換** - 標準Markdown記法をそのまま使用
+- 🧩 **Mermaid対応** - Mermaid記法の図を自動で画像化
 
 ## インストール
 
 ```bash
-npm install -g md2ppt
+npm install -g mashup
 ```
 
 ## 基本的な使い方
 
 ```bash
 # 基本的な変換
-md2ppt input.md -o output.pptx
+mashup input.md -o output.pptx
 
 # テーマを指定
-md2ppt input.md -o output.pptx --theme corporate
+mashup input.md -o output.pptx --theme corporate
 
 # 監視モード（変更時に自動再生成）
-md2ppt input.md -o output.pptx --watch
+mashup input.md -o output.pptx --watch
 ```
 
 ## 記法ガイド
@@ -237,10 +238,41 @@ grid: 12x9
 ![地域別](./charts/region.png)
 ```
 
+### Mermaid図を含むスライド
+
+````markdown
+---
+grid: 12x9
+---
+
+# システム構成図 [1-12, 1]
+
+[1-6, 2-8]
+```mermaid
+graph TD
+    A[ユーザー] --> B[Webサーバー]
+    B --> C[APIサーバー]
+    C --> D[(データベース)]
+    C --> E[キャッシュ]
+```
+
+[7-12, 2-5]
+## アーキテクチャ
+- Webサーバー: nginx
+- API: Node.js
+- DB: PostgreSQL
+
+[7-12, 6-8]
+### 特徴
+- スケーラブル
+- 高可用性
+- セキュア
+````
+
 ## CLIオプション
 
 ```
-Usage: md2ppt [options] <input>
+Usage: mashup [options] <input>
 
 Markdownから PowerPoint を生成します
 
@@ -259,7 +291,7 @@ Options:
 ## プログラムからの使用
 
 ```typescript
-import { md2ppt } from 'md2ppt';
+import { mashup } from 'mashup';
 
 const markdown = `
 # タイトル
@@ -267,7 +299,7 @@ const markdown = `
 内容...
 `;
 
-await md2ppt(markdown, {
+await mashup(markdown, {
   output: 'output.pptx',
   theme: 'default'
 });
@@ -275,7 +307,7 @@ await md2ppt(markdown, {
 
 ## MCPサーバーとしての使用
 
-md2pptはModel Context Protocol (MCP) サーバーとして動作し、Claude Desktop等のAIアシスタントから直接呼び出すことができます。
+mashupはModel Context Protocol (MCP) サーバーとして動作し、Claude Desktop等のAIアシスタントから直接呼び出すことができます。
 
 ### 提供されるツール
 
@@ -283,7 +315,7 @@ md2pptはModel Context Protocol (MCP) サーバーとして動作し、Claude De
 |---------|------|
 | `convert_markdown_to_pptx` | Markdownテキストから直接PPTXを生成 |
 | `convert_file_to_pptx` | MarkdownファイルからPPTXを生成 |
-| `get_md2ppt_guide` | md2ppt記法ガイドを取得 |
+| `get_mashup_guide` | mashup記法ガイドを取得 |
 
 ### Claude Desktopでの設定
 
@@ -292,9 +324,9 @@ md2pptはModel Context Protocol (MCP) サーバーとして動作し、Claude De
 ```json
 {
   "mcpServers": {
-    "md2ppt": {
+    "mashup": {
       "command": "node",
-      "args": ["/path/to/md2ppt/dist/mcp.js"]
+      "args": ["/path/to/mashup/dist/mcp.js"]
     }
   }
 }
@@ -305,8 +337,8 @@ npmでグローバルインストールしている場合:
 ```json
 {
   "mcpServers": {
-    "md2ppt": {
-      "command": "md2ppt-mcp"
+    "mashup": {
+      "command": "mashup-mcp"
     }
   }
 }
@@ -318,7 +350,7 @@ AIアシスタントに以下のように依頼できます:
 
 - 「このMarkdownをPowerPointに変換して」
 - 「プレゼン資料を作成して、/path/to/output.pptx に保存して」
-- 「md2pptの記法を教えて」
+- 「mashupの記法を教えて」
 
 ## 対応Markdown記法
 
@@ -330,6 +362,7 @@ AIアシスタントに以下のように依頼できます:
 | 画像 (`![](...)`) | ✅ |
 | 表 | ✅ |
 | コードブロック | ✅ |
+| Mermaid図 (` ```mermaid `) | ✅ |
 | 太字・斜体 | ✅ |
 | リンク | ✅ |
 | 引用 | ✅ |

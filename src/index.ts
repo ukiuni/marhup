@@ -1,5 +1,5 @@
 /**
- * md2ppt - Markdown to PowerPoint converter
+ * mashup - Markdown to PowerPoint converter
  * メインエクスポート
  */
 
@@ -12,7 +12,7 @@ import type { ConvertOptions, ParsedDocument } from './types/index.js';
 /**
  * MarkdownからPPTXを生成
  */
-export async function md2ppt(
+export async function mashup(
   markdown: string,
   options: ConvertOptions
 ): Promise<void> {
@@ -26,14 +26,14 @@ export async function md2ppt(
 /**
  * MarkdownファイルからPPTXを生成
  */
-export async function md2pptFile(
+export async function mashupFile(
   inputPath: string,
   options: ConvertOptions
 ): Promise<void> {
   const markdown = fs.readFileSync(inputPath, 'utf-8');
   // 入力ファイルのディレクトリをベースパスとして設定
   const basePath = options.basePath || path.dirname(path.resolve(inputPath));
-  await md2ppt(markdown, { ...options, basePath });
+  await mashup(markdown, { ...options, basePath });
 }
 
 /**
@@ -55,4 +55,4 @@ export type {
 } from './types/index.js';
 
 // デフォルトエクスポート
-export default md2ppt;
+export default mashup;

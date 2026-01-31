@@ -5,7 +5,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { md2ppt, md2pptFile } from './index.js';
+import { mashup, mashupFile } from './index.js';
 
 export interface ToolResult {
   content: { type: string; text: string }[];
@@ -72,9 +72,9 @@ export function getToolDefinitions(): ToolDefinition[] {
       },
     },
     {
-      name: 'get_md2ppt_guide',
+      name: 'get_mashup_guide',
       description:
-        'md2ppt用のMarkdown記法ガイドを取得します。グリッドレイアウトやスタイル指定の方法を確認できます。',
+        'mashup用のMarkdown記法ガイドを取得します。グリッドレイアウトやスタイル指定の方法を確認できます。',
       inputSchema: {
         type: 'object',
         properties: {},
@@ -87,8 +87,8 @@ export function getToolDefinitions(): ToolDefinition[] {
 /**
  * Markdownテキストから記法ガイドを生成
  */
-export function getMd2pptGuide(): string {
-  return `# md2ppt Markdown記法ガイド
+export function getMashupGuide(): string {
+  return `# mashup Markdown記法ガイド
 
 ## 基本構造
 
@@ -166,7 +166,22 @@ grid: 12x9
 - \`.right\` - 右揃え
 - \`.small\` - 小さいフォント
 - \`.footer\` - フッター用
-- \`.gray\` - グレー文字`;
+- \`.gray\` - グレー文字
+
+## Mermaid図
+
+Mermaid記法で図を描くと自動的に画像に変換されます:
+
+\`\`\`markdown
+[1-6, 2-8]
+\\\`\\\`\\\`mermaid
+graph TD
+    A[開始] --> B[処理]
+    B --> C[終了]
+\\\`\\\`\\\`
+\`\`\`
+
+対応図形: flowchart, sequence, class, state, ER図など`;
 }
 
 /**
@@ -195,7 +210,7 @@ export async function handleToolCall(
           fs.mkdirSync(outputDir, { recursive: true });
         }
 
-        await md2ppt(markdown, {
+        await mashup(markdown, {
           output: outputPath,
           basePath: basePath || process.cwd(),
         });
@@ -230,7 +245,7 @@ export async function handleToolCall(
           fs.mkdirSync(outputDir, { recursive: true });
         }
 
-        await md2pptFile(inputPath, { output: outputPath });
+        await mashupFile(inputPath, { output: outputPath });
 
         return {
           content: [
@@ -242,12 +257,12 @@ export async function handleToolCall(
         };
       }
 
-      case 'get_md2ppt_guide': {
+      case 'get_mashup_guide': {
         return {
           content: [
             {
               type: 'text',
-              text: getMd2pptGuide(),
+              text: getMashupGuide(),
             },
           ],
         };

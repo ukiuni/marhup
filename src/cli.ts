@@ -1,17 +1,17 @@
 #!/usr/bin/env node
 /**
- * md2ppt CLI
+ * mashup CLI
  */
 
 import { Command } from 'commander';
 import * as fs from 'fs';
 import * as path from 'path';
-import { md2pptFile } from './index.js';
+import { mashupFile } from './index.js';
 
 const program = new Command();
 
 program
-  .name('md2ppt')
+  .name('mashup')
   .description('Markdownからグリッドベースのレイアウトで PowerPoint (PPTX) を生成')
   .version('0.1.0')
   .argument('<input>', '入力Markdownファイル')
@@ -39,7 +39,7 @@ program
       console.log(`📝 ${input} を変換中...`);
 
       // 変換実行
-      await md2pptFile(inputPath, {
+      await mashupFile(inputPath, {
         output: outputPath,
         theme: options.theme,
         grid: options.grid,
@@ -55,7 +55,7 @@ program
           if (eventType === 'change') {
             console.log(`\n🔄 変更を検出: ${input}`);
             try {
-              await md2pptFile(inputPath, {
+              await mashupFile(inputPath, {
                 output: outputPath,
                 theme: options.theme,
                 grid: options.grid,

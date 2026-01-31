@@ -1,8 +1,8 @@
-# AGENTS.md - md2ppt 開発ガイド
+# AGENTS.md - mashup 開発ガイド
 
 ## プロジェクト概要
 
-`md2ppt` は、Markdownファイルからグリッドベースのレイアウト指定でPowerPoint (PPTX) を生成するCLIツールです。
+`mashup` は、Markdownファイルからグリッドベースのレイアウト指定でPowerPoint (PPTX) を生成するCLIツールです。
 
 ## 技術スタック
 
@@ -19,7 +19,7 @@
 ## ディレクトリ構造
 
 ```
-md2ppt/
+mashup/
 ├── src/
 │   ├── index.ts           # CLIエントリーポイント
 │   ├── parser/
