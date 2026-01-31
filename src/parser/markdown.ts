@@ -9,7 +9,6 @@ import type {
   TableData,
   ParsedDocument,
   Slide,
-  SlideFrontmatter,
   GridPosition,
   StyleOptions,
 } from '../types/index.js';
@@ -144,7 +143,7 @@ function parseSlideElements(content: string): SlideElement[] {
 /**
  * 1行をパース（見出しなど、インラインでグリッド指定があるケース）
  */
-function parseLine(line: string): SlideElement[] {
+function _parseLine(line: string): SlideElement[] {
   const elements: SlideElement[] = [];
 
   // 見出しチェック
@@ -167,7 +166,7 @@ function parseLine(line: string): SlideElement[] {
   // 画像チェック
   const imageMatch = line.match(/^!\[([^\]]*)\]\(([^)]+)\)(.*)$/);
   if (imageMatch) {
-    const altText = imageMatch[1];
+    const _altText = imageMatch[1];
     const src = imageMatch[2];
     const rest = imageMatch[3];
     const { position, style } = extractGridAndStyle(rest);

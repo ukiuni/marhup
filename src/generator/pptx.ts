@@ -7,7 +7,7 @@ import type { ParsedDocument, GridConfig } from '../types/index.js';
 import { layoutSlide, gridToCoordinates } from '../layout/index.js';
 import type { PlacedElement } from '../layout/index.js';
 import { parseGridString } from '../parser/index.js';
-import { defaultTheme, resolveStyleClasses } from '../theme/index.js';
+import { resolveStyleClasses } from '../theme/index.js';
 import { addTextElement, addHeadingElement } from './text.js';
 import { addImageElement } from './image.js';
 import { addTableElement } from './table.js';
@@ -35,7 +35,6 @@ export async function generatePptx(
 
   // グローバルグリッド設定
   const globalGridStr = document.globalFrontmatter.grid || '12x9';
-  const globalGrid = parseGridString(globalGridStr);
 
   // 各スライドを生成
   for (const slide of document.slides) {

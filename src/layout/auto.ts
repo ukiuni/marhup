@@ -2,7 +2,7 @@
  * 自動配置ロジック
  */
 
-import type { SlideElement, GridConfig, GridPosition, DEFAULT_ELEMENT_HEIGHT } from '../types/index.js';
+import type { SlideElement, GridConfig, GridPosition } from '../types/index.js';
 import type { GridMap, PlacedElement } from './types.js';
 
 // 要素タイプごとのデフォルト高さ

@@ -8,7 +8,7 @@ import { autoPlaceElements } from './auto.js';
 import type { PlacedElement, LayoutResult } from './types.js';
 
 // デフォルトグリッド
-const DEFAULT_GRID: GridConfig = { cols: 12, rows: 9 };
+const _DEFAULT_GRID: GridConfig = { cols: 12, rows: 9 };
 
 /**
  * スライドのレイアウトを計算

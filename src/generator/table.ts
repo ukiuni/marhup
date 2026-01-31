@@ -21,7 +21,7 @@ export function addTableElement(
   slide: PptxGenJS.Slide,
   element: PlacedElement,
   coords: Coordinates,
-  styleProps: Record<string, unknown>
+  _styleProps: Record<string, unknown>
 ): void {
   const tableData = element.content as TableData;
 

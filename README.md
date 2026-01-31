@@ -273,6 +273,53 @@ await md2ppt(markdown, {
 });
 ```
 
+## MCPサーバーとしての使用
+
+md2pptはModel Context Protocol (MCP) サーバーとして動作し、Claude Desktop等のAIアシスタントから直接呼び出すことができます。
+
+### 提供されるツール
+
+| ツール名 | 説明 |
+|---------|------|
+| `convert_markdown_to_pptx` | Markdownテキストから直接PPTXを生成 |
+| `convert_file_to_pptx` | MarkdownファイルからPPTXを生成 |
+| `get_md2ppt_guide` | md2ppt記法ガイドを取得 |
+
+### Claude Desktopでの設定
+
+`~/Library/Application Support/Claude/claude_desktop_config.json` に以下を追加:
+
+```json
+{
+  "mcpServers": {
+    "md2ppt": {
+      "command": "node",
+      "args": ["/path/to/md2ppt/dist/mcp.js"]
+    }
+  }
+}
+```
+
+npmでグローバルインストールしている場合:
+
+```json
+{
+  "mcpServers": {
+    "md2ppt": {
+      "command": "md2ppt-mcp"
+    }
+  }
+}
+```
+
+### 使用例
+
+AIアシスタントに以下のように依頼できます:
+
+- 「このMarkdownをPowerPointに変換して」
+- 「プレゼン資料を作成して、/path/to/output.pptx に保存して」
+- 「md2pptの記法を教えて」
+
 ## 対応Markdown記法
 
 | 記法 | 対応 |
