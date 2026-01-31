@@ -31,7 +31,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Install dependencies
-        run: npm install --force
+        run: npm ci --force
 
       - name: Run tests
         run: npm test
