@@ -3,7 +3,7 @@
  */
 
 import PptxGenJS from 'pptxgenjs';
-import type { ParsedDocument, GridConfig } from '../types/index';
+import type { ParsedDocument, GridConfig, Slide } from '../types/index';
 import { layoutSlide, gridToCoordinates } from '../layout/index';
 import type { PlacedElement } from '../layout/index';
 import { parseGridString } from '../parser/index';
@@ -50,7 +50,7 @@ export async function generatePptx(
 
     // 要素を配置
     for (const element of layout.elements) {
-      await addElement(pptxSlide, element, slideGrid, basePath);
+      await addElement(pptxSlide, element, slideGrid, slide, basePath);
     }
   }
 
@@ -65,6 +65,7 @@ async function addElement(
   slide: PptxGenJS.Slide,
   element: PlacedElement,
   grid: GridConfig,
+  slideData: Slide,
   basePath?: string
 ): Promise<void> {
   // グリッド位置を座標に変換
@@ -72,7 +73,7 @@ async function addElement(
 
   // スタイルを解決
   const styleProps = element.style?.classes
-    ? resolveStyleClasses(element.style.classes)
+    ? resolveStyleClasses(element.style.classes, slideData.frontmatter.classes)
     : {};
 
   // 要素タイプに応じて追加

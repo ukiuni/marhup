@@ -26,7 +26,7 @@ export function parseMarkdown(markdown: string): ParsedDocument {
   const slideContents = splitSlides(body);
 
   // 各スライドをパース
-  const slides = slideContents.map((content) => parseSlide(content));
+  const slides = slideContents.map((content) => parseSlide(content, globalFrontmatter.aliases));
 
   return {
     globalFrontmatter,
@@ -47,12 +47,15 @@ function splitSlides(content: string): string[] {
 /**
  * 1スライド分のコンテンツをパース
  */
-function parseSlide(content: string): Slide {
+function parseSlide(content: string, globalAliases?: Record<string, string>): Slide {
   // スライド個別のFront Matterがあれば抽出
   const { frontmatter, body } = parseFrontmatter(content);
 
+  // aliases をマージ（スライド個別が優先）
+  const mergedAliases = { ...globalAliases, ...frontmatter.aliases };
+
   // 要素をパース
-  const elements = parseSlideElements(body);
+  const elements = parseSlideElements(body, mergedAliases);
 
   return {
     frontmatter,
@@ -63,7 +66,7 @@ function parseSlide(content: string): Slide {
 /**
  * スライド内の要素をパース
  */
-function parseSlideElements(content: string): SlideElement[] {
+function parseSlideElements(content: string, aliases?: Record<string, string>): SlideElement[] {
   const elements: SlideElement[] = [];
   const lines = content.split('\n');
 
@@ -90,7 +93,7 @@ function parseSlideElements(content: string): SlideElement[] {
     const line = lines[i];
 
     // グリッドブロックの開始をチェック
-    const { isGridBlock, position, style } = parseBlockGridLine(line);
+    const { isGridBlock, position, style } = parseBlockGridLine(line, aliases);
 
     if (isGridBlock) {
       // 前のノンブロック行があれば処理
@@ -101,7 +104,8 @@ function parseSlideElements(content: string): SlideElement[] {
         const blockElements = parseBlockContent(
           currentBlock.lines.join('\n'),
           currentBlock.position,
-          currentBlock.style
+          currentBlock.style,
+          aliases
         );
         elements.push(...blockElements);
       }
@@ -132,7 +136,8 @@ function parseSlideElements(content: string): SlideElement[] {
     const blockElements = parseBlockContent(
       currentBlock.lines.join('\n'),
       currentBlock.position,
-      currentBlock.style
+      currentBlock.style,
+      aliases
     );
     elements.push(...blockElements);
   }
@@ -143,14 +148,14 @@ function parseSlideElements(content: string): SlideElement[] {
 /**
  * 1行をパース（見出しなど、インラインでグリッド指定があるケース）
  */
-function _parseLine(line: string): SlideElement[] {
+function _parseLine(line: string, aliases?: Record<string, string>): SlideElement[] {
   const elements: SlideElement[] = [];
 
   // 見出しチェック
   const headingMatch = line.match(/^(#{1,6})\s+(.+)$/);
   if (headingMatch) {
     const level = headingMatch[1].length;
-    const { position, style, cleanText } = extractGridAndStyle(headingMatch[2]);
+    const { position, style, cleanText } = extractGridAndStyle(headingMatch[2], aliases);
 
     elements.push({
       type: 'heading',
@@ -169,7 +174,7 @@ function _parseLine(line: string): SlideElement[] {
     const _altText = imageMatch[1];
     const src = imageMatch[2];
     const rest = imageMatch[3];
-    const { position, style } = extractGridAndStyle(rest);
+    const { position, style } = extractGridAndStyle(rest, aliases);
 
     elements.push({
       type: 'image',
@@ -190,7 +195,8 @@ function _parseLine(line: string): SlideElement[] {
 function parseBlockContent(
   content: string,
   position?: GridPosition,
-  style?: StyleOptions
+  style?: StyleOptions,
+  aliases?: Record<string, string>
 ): SlideElement[] {
   const elements: SlideElement[] = [];
   const tokens = marked.lexer(content);
@@ -198,7 +204,7 @@ function parseBlockContent(
   // グリッドブロック内の要素を収集
   const blockElements: SlideElement[] = [];
   for (const token of tokens) {
-    const element = tokenToElement(token);
+    const element = tokenToElement(token, aliases);
     if (element) {
       blockElements.push(element);
     }
@@ -241,11 +247,11 @@ function parseBlockContent(
 /**
  * marked トークンをSlideElementに変換
  */
-function tokenToElement(token: Token): SlideElement | null {
+function tokenToElement(token: Token, aliases?: Record<string, string>): SlideElement | null {
   switch (token.type) {
     case 'heading': {
       const headingToken = token as Tokens.Heading;
-      const { position, style, cleanText } = extractGridAndStyle(headingToken.text);
+      const { position, style, cleanText } = extractGridAndStyle(headingToken.text, aliases);
       return {
         type: 'heading',
         level: headingToken.depth,
@@ -258,14 +264,14 @@ function tokenToElement(token: Token): SlideElement | null {
 
     case 'paragraph': {
       const paragraphToken = token as Tokens.Paragraph;
-      const { position, style, cleanText } = extractGridAndStyle(paragraphToken.text);
+      const { position, style, cleanText } = extractGridAndStyle(paragraphToken.text, aliases);
 
       // 画像をチェック
       const imageMatch = paragraphToken.text.match(/^!\[([^\]]*)\]\(([^)]+)\)(.*)$/);
       if (imageMatch) {
         const src = imageMatch[2];
         const rest = imageMatch[3];
-        const { position: imgPos, style: imgStyle } = extractGridAndStyle(rest);
+        const { position: imgPos, style: imgStyle } = extractGridAndStyle(rest, aliases);
         return {
           type: 'image',
           content: src,

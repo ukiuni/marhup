@@ -1,13 +1,28 @@
 ---
 title: marhup サンプルプレゼンテーション
 grid: 12x9
+aliases:
+  title: "[1-12, 1]"
+  contents: "[1-12, 2-8]"
+  contents_left: "[1-6, 2-8]"
+  contents_right: "[7-12, 2-8]"
+  footer: "[1-12, 8]"
+classes:
+  myclass:
+    color: '#ff0000'
+    bold: true
+    fill: { color: '#ffe6e6' }
+  another:
+    color: '#00aa00'
+    fontSize: 18
+    italic: true
 ---
 
-# marhup デモ [1-12, 4]
+# marhup デモ [title]
 
-グリッドベースレイアウトで PowerPoint を生成 [1-12, 6] {.center}
+グリッドベースレイアウトで PowerPoint を生成 [contents] {.center}
 
-2026年1月 [1-12, 8] {.center .small}
+2026年1月 [footer] {.center .small}
 
 ---
 
@@ -30,19 +45,19 @@ grid: 12x9
 
 # 2カラムレイアウト [1-12, 1]
 
-[1-6, 2-4] {.card .blue}
+[contents_left] {.card .blue}
 ### 課題
 - 手作業による入力ミス
 - 処理に時間がかかる
 - 属人化している
 
-[7-12, 2-4] {.card .green}
+[contents_right] {.card .green}
 ### 解決策
 - 自動バリデーション
 - バッチ処理
 - マニュアル整備
 
-[1-12, 5-8]
+[contents]
 | 項目 | Before | After |
 |------|--------|-------|
 | 処理時間 | 3時間 | 10分 |
@@ -51,9 +66,9 @@ grid: 12x9
 
 ---
 
-# まとめ [1-12, 1]
+# まとめ [title]
 
-[1-12, 3-7]
+[contents]
 ## marhup の特徴
 
 1. **直感的なグリッド指定** - `[1-6, 2-8]` 形式で簡単レイアウト
@@ -61,23 +76,23 @@ grid: 12x9
 3. **自動配置** - 位置指定を省略すれば自動でレイアウト
 4. **スタイルクラス** - `{.center .blue}` で見た目をカスタマイズ
 
-[1-12, 9]
+[footer]
 詳細は README.md を参照 {.footer .center}
 
 ---
 
-# 画像の配置例（縦長画像） [1-12, 1]
+# 画像の配置例（縦長画像） [title]
 
-[1-5, 2-8]
+[contents_left]
 ![縦長画像](./sample_v.png)
 
-[6-12, 2-4]
+[contents_right]
 ## 縦長画像の特徴
 - 縦横比 2:1
 - 左側に大きく配置
 - テキストは右側に
 
-[6-12, 5-8]
+[contents_right]
 ### 用途
 - ポートレート写真
 - スマホのスクリーンショット
@@ -85,12 +100,12 @@ grid: 12x9
 
 ---
 
-# 画像の配置例（横長画像） [1-12, 1]
+# 画像の配置例（横長画像） [title]
 
-[1-12, 2-5]
+[contents]
 ![横長画像](./sample_h.png)
 
-[1-12, 6-8]
+[contents]
 ## 横長画像の特徴
 - 縦横比 1:2
 - 全幅で配置すると迫力が出る
@@ -98,9 +113,20 @@ grid: 12x9
 
 ---
 
-# Mermaid図の例 [1-12, 1]
+# カスタムクラスの例 [title]
 
-[1-6, 2-8]
+[contents_left] {.myclass}
+### カスタムスタイル
+この要素はカスタムクラス `myclass` を使用しています。
+
+[contents_right] {.another}
+### 別のカスタムスタイル
+こちらは `another` クラスです。
+
+[contents]
+カスタムクラスはFront Matterで定義できます。色、フォントサイズ、装飾などを自由に設定可能です。
+
+[contents_left]
 ```mermaid
 graph TD
     A[Markdown] --> B[Parser]
@@ -109,13 +135,13 @@ graph TD
     D --> E[output.pptx]
 ```
 
-[7-12, 2-5]
+[contents_right]
 ## フローチャート
 - Mermaid記法で図を描画
 - 自動的に画像に変換
 - PowerPointに埋め込み
 
-[7-12, 6-8]
+[contents_right]
 ### 対応図形
 - flowchart / graph
 - sequence diagram

@@ -52,6 +52,18 @@ describe('extractGridPosition', () => {
     });
   });
 
+  it('別名を解決できる', () => {
+    const aliases = { title: '[1-12, 1]' };
+    const result = extractGridPosition('テキスト [title]', aliases);
+    expect(result.position).toEqual({
+      colStart: 1,
+      colEnd: 12,
+      rowStart: 1,
+      rowEnd: 1,
+    });
+    expect(result.cleanText).toBe('テキスト');
+  });
+
   it('位置指定がない場合はundefinedを返す', () => {
     const result = extractGridPosition('テキストのみ');
     expect(result.position).toBeUndefined();
@@ -100,6 +112,19 @@ describe('extractGridAndStyle', () => {
     expect(result.style?.classes).toEqual(['center']);
     expect(result.cleanText).toBe('# タイトル');
   });
+
+  it('別名とスタイルを両方抽出できる', () => {
+    const aliases = { title: '[1-12, 1]' };
+    const result = extractGridAndStyle('# タイトル [title] {.center}', aliases);
+    expect(result.position).toEqual({
+      colStart: 1,
+      colEnd: 12,
+      rowStart: 1,
+      rowEnd: 1,
+    });
+    expect(result.style?.classes).toEqual(['center']);
+    expect(result.cleanText).toBe('# タイトル');
+  });
 });
 
 describe('parseBlockGridLine', () => {
@@ -118,6 +143,18 @@ describe('parseBlockGridLine', () => {
     const result = parseBlockGridLine('[1-6, 2-8] {.card}');
     expect(result.isGridBlock).toBe(true);
     expect(result.style?.classes).toEqual(['card']);
+  });
+
+  it('別名でグリッドブロックを認識できる', () => {
+    const aliases = { title: '[1-12, 1]' };
+    const result = parseBlockGridLine('[title]', aliases);
+    expect(result.isGridBlock).toBe(true);
+    expect(result.position).toEqual({
+      colStart: 1,
+      colEnd: 12,
+      rowStart: 1,
+      rowEnd: 1,
+    });
   });
 
   it('通常のテキストはグリッドブロックではない', () => {

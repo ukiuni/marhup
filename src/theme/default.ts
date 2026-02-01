@@ -69,11 +69,14 @@ export const styleClasses: Record<string, Record<string, unknown>> = {
 /**
  * スタイルクラスをpptxgenjs形式に変換
  */
-export function resolveStyleClasses(classes: string[]): Record<string, unknown> {
+export function resolveStyleClasses(classes: string[], customClasses?: Record<string, Record<string, unknown>>): Record<string, unknown> {
   let result: Record<string, unknown> = {};
 
   for (const className of classes) {
-    const style = styleClasses[className];
+    let style = customClasses?.[className];
+    if (!style) {
+      style = styleClasses[className];
+    }
     if (style) {
       result = { ...result, ...style };
     }

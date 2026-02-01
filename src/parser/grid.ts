@@ -7,33 +7,51 @@ import type { GridPosition, StyleOptions } from '../types/index';
 // グリッド位置パターン: [1-6, 2-8] または [3, 5]
 const GRID_PATTERN = /\[(\d+)(?:-(\d+))?,\s*(\d+)(?:-(\d+))?\]/;
 
+// 別名パターン: [title] など
+const ALIAS_PATTERN = /\[([a-zA-Z_][a-zA-Z0-9_]*)\]/;
+
 // スタイルパターン: {.class1 .class2 key=value}
 const STYLE_PATTERN = /\{([^}]+)\}/;
 
 /**
  * 行からグリッド位置を抽出
  */
-export function extractGridPosition(text: string): {
+export function extractGridPosition(text: string, aliases?: Record<string, string>): {
   position: GridPosition | undefined;
   cleanText: string;
 } {
-  const match = text.match(GRID_PATTERN);
+  // まずグリッドパターンをチェック
+  let match = text.match(GRID_PATTERN);
 
-  if (!match) {
-    return { position: undefined, cleanText: text };
+  if (match) {
+    const colStart = parseInt(match[1], 10);
+    const colEnd = match[2] ? parseInt(match[2], 10) : colStart;
+    const rowStart = parseInt(match[3], 10);
+    const rowEnd = match[4] ? parseInt(match[4], 10) : rowStart;
+
+    const cleanText = text.replace(GRID_PATTERN, '').trim();
+
+    return {
+      position: { colStart, colEnd, rowStart, rowEnd },
+      cleanText,
+    };
   }
 
-  const colStart = parseInt(match[1], 10);
-  const colEnd = match[2] ? parseInt(match[2], 10) : colStart;
-  const rowStart = parseInt(match[3], 10);
-  const rowEnd = match[4] ? parseInt(match[4], 10) : rowStart;
+  // 次に別名パターンをチェック
+  if (aliases) {
+    match = text.match(ALIAS_PATTERN);
+    if (match) {
+      const alias = match[1];
+      const gridStr = aliases[alias];
+      if (gridStr) {
+        // 別名をグリッド文字列に置き換えて再帰的にパース
+        const tempText = text.replace(ALIAS_PATTERN, gridStr);
+        return extractGridPosition(tempText, aliases);
+      }
+    }
+  }
 
-  const cleanText = text.replace(GRID_PATTERN, '').trim();
-
-  return {
-    position: { colStart, colEnd, rowStart, rowEnd },
-    cleanText,
-  };
+  return { position: undefined, cleanText: text };
 }
 
 /**
@@ -78,13 +96,13 @@ export function extractStyle(text: string): {
 /**
  * テキストからグリッド位置とスタイルを両方抽出
  */
-export function extractGridAndStyle(text: string): {
+export function extractGridAndStyle(text: string, aliases?: Record<string, string>): {
   position: GridPosition | undefined;
   style: StyleOptions | undefined;
   cleanText: string;
 } {
   // まずグリッド位置を抽出
-  const { position, cleanText: afterGrid } = extractGridPosition(text);
+  const { position, cleanText: afterGrid } = extractGridPosition(text, aliases);
   // 次にスタイルを抽出
   const { style, cleanText: finalText } = extractStyle(afterGrid);
 
@@ -95,19 +113,19 @@ export function extractGridAndStyle(text: string): {
  * ブロックの開始行からグリッド位置を抽出（ブロック用）
  * 例: "[1-6, 2-8]" で始まる行
  */
-export function parseBlockGridLine(line: string): {
+export function parseBlockGridLine(line: string, aliases?: Record<string, string>): {
   isGridBlock: boolean;
   position: GridPosition | undefined;
   style: StyleOptions | undefined;
 } {
   const trimmed = line.trim();
 
-  // 行が [数字 で始まるかチェック
-  if (!trimmed.match(/^\[\d/)) {
+  // 行が [数字 または [文字 で始まるかチェック
+  if (!trimmed.match(/^\[[\d[a-zA-Z_]/)) {
     return { isGridBlock: false, position: undefined, style: undefined };
   }
 
-  const { position, cleanText } = extractGridPosition(trimmed);
+  const { position, cleanText } = extractGridPosition(trimmed, aliases);
 
   if (!position) {
     return { isGridBlock: false, position: undefined, style: undefined };

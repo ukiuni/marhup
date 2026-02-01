@@ -62,6 +62,8 @@ export interface SlideFrontmatter {
   grid?: string;
   layout?: string;
   theme?: string;
+  classes?: Record<string, Record<string, unknown>>;
+  aliases?: Record<string, string>;
   [key: string]: unknown;
 }
 

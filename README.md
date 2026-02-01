@@ -56,6 +56,11 @@ marhup input.md -o output.pptx --watch
 title: プレゼンテーション
 grid: 12x9
 theme: default
+aliases:
+  title: "[1-12, 1]"
+  contents: "[1-12, 2-8]"
+  left: "[1-6, 2-8]"
+  right: "[7-12, 2-8]"
 ---
 ```
 
@@ -65,19 +70,25 @@ theme: default
 | `grid` | グリッドサイズ（列x行） | `12x9` |
 | `theme` | テーマ名 | `default` |
 | `layout` | プリセットレイアウト | なし |
+| `aliases` | グリッド位置の別名定義 | なし |
+| `classes` | カスタムスタイルクラス | なし |
 
 ### グリッド位置指定
 
-`[列, 行]` 形式で要素の位置を指定します：
+`[列, 行]` 形式または定義した別名で要素の位置を指定します：
 
 ```markdown
 # タイトル [1-12, 1]
+# タイトル [title]  # 別名使用
 
 [1-6, 2-8]
 左側のコンテンツ
 
 [7-12, 2-8]
 右側のコンテンツ
+
+[contents]  # 別名使用
+中央のコンテンツ
 ```
 
 #### 記法
@@ -125,10 +136,16 @@ theme: default
 | 配置 | `.center` | 中央揃え |
 | | `.left` | 左揃え |
 | | `.right` | 右揃え |
-| 色 | `.red` | 赤色 |
+| 文字色 | `.red` | 赤色 |
 | | `.blue` | 青色 |
 | | `.green` | 緑色 |
 | | `.gray` | グレー |
+| | `.orange` | オレンジ色 |
+| | `.purple` | 紫色 |
+| 背景色 | `.bg-red` | 薄い赤背景 |
+| | `.bg-blue` | 薄い青背景 |
+| | `.bg-green` | 薄い緑背景 |
+| | `.bg-gray` | 薄い灰背景 |
 | サイズ | `.small` | 小さいフォント |
 | | `.large` | 大きいフォント |
 | 装飾 | `.bold` | 太字 |
@@ -137,6 +154,20 @@ theme: default
 | 特殊 | `.header` | ヘッダー領域 |
 | | `.footer` | フッター領域 |
 | | `.note` | 注釈スタイル |
+
+**カスタムクラス**: Front Matterで独自のスタイルクラスを定義できます。定義したクラスはMarkdown内で使用可能です。
+
+```markdown
+---
+classes:
+  myclass:
+    color: '#ff0000'
+    bold: true
+    fill: { color: '#ffe6e6' }
+---
+
+# タイトル {.myclass}
+```
 
 ### 省略時のデフォルト動作
 
@@ -351,6 +382,35 @@ AIアシスタントに以下のように依頼できます:
 - 「このMarkdownをPowerPointに変換して」
 - 「プレゼン資料を作成して、/path/to/output.pptx に保存して」
 - 「marhupの記法を教えて」
+- 「カスタムスタイルを使ってプレゼンを作成して」
+
+#### カスタムクラスを使用した例
+
+```markdown
+---
+classes:
+  highlight:
+    color: '#ff6b35'
+    bold: true
+    fill: { color: '#fff3cd' }
+  note:
+    fontSize: 12
+    color: '#6c757d'
+    italic: true
+---
+
+# プロジェクト概要 [1-12, 1]
+
+[1-6, 2-8]
+## 主な機能 {.highlight}
+- 自動レイアウト
+- スタイルカスタマイズ
+- Mermaid図対応
+
+[7-12, 2-8]
+## 注意事項 {.note}
+カスタムクラスはFront Matterで定義できます。
+```
 
 ## 対応Markdown記法
 
