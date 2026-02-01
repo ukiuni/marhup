@@ -298,10 +298,10 @@ marhup input.md -o output.pptx --watch
 
 ```typescript
 // Markdown文字列からPPTX生成
-function mashup(markdown: string, options: ConvertOptions): Promise<void>
+function marhup(markdown: string, options: ConvertOptions): Promise<void>
 
 // ファイルからPPTX生成
-function mashupFile(inputPath: string, options: ConvertOptions): Promise<void>
+function marhupFile(inputPath: string, options: ConvertOptions): Promise<void>
 ```
 
 ### 7.2 ConvertOptions型

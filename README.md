@@ -272,7 +272,7 @@ graph TD
 ## CLIオプション
 
 ```
-Usage: mashup [options] <input>
+Usage: marhup [options] <input>
 
 Markdownから PowerPoint を生成します
 
@@ -291,7 +291,7 @@ Options:
 ## プログラムからの使用
 
 ```typescript
-import { mashup } from 'mashup';
+import { mashup } from 'marhup';
 
 const markdown = `
 # タイトル
@@ -307,7 +307,7 @@ await mashup(markdown, {
 
 ## MCPサーバーとしての使用
 
-mashupはModel Context Protocol (MCP) サーバーとして動作し、Claude Desktop等のAIアシスタントから直接呼び出すことができます。
+marhupはModel Context Protocol (MCP) サーバーとして動作し、Claude Desktop等のAIアシスタントから直接呼び出すことができます。
 
 ### 提供されるツール
 
@@ -315,7 +315,7 @@ mashupはModel Context Protocol (MCP) サーバーとして動作し、Claude De
 |---------|------|
 | `convert_markdown_to_pptx` | Markdownテキストから直接PPTXを生成 |
 | `convert_file_to_pptx` | MarkdownファイルからPPTXを生成 |
-| `get_mashup_guide` | mashup記法ガイドを取得 |
+| `get_marhup_guide` | marhup記法ガイドを取得 |
 
 ### Claude Desktopでの設定
 
@@ -324,9 +324,9 @@ mashupはModel Context Protocol (MCP) サーバーとして動作し、Claude De
 ```json
 {
   "mcpServers": {
-    "mashup": {
+    "marhup": {
       "command": "node",
-      "args": ["/path/to/mashup/dist/mcp.js"]
+      "args": ["/path/to/marhup/dist/mcp.js"]
     }
   }
 }
@@ -337,8 +337,8 @@ npmでグローバルインストールしている場合:
 ```json
 {
   "mcpServers": {
-    "mashup": {
-      "command": "mashup-mcp"
+    "marhup": {
+      "command": "marhup-mcp"
     }
   }
 }
@@ -350,7 +350,7 @@ AIアシスタントに以下のように依頼できます:
 
 - 「このMarkdownをPowerPointに変換して」
 - 「プレゼン資料を作成して、/path/to/output.pptx に保存して」
-- 「mashupの記法を教えて」
+- 「marhupの記法を教えて」
 
 ## 対応Markdown記法
 
