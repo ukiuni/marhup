@@ -32,6 +32,10 @@
     "grid-layout"
   ],
   "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ukiuni/marhup.git"
+  },
   "license": "MIT",
   "dependencies": {
     "@mermaid-js/mermaid-cli": "^11.12.0",
