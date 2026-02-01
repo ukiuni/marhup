@@ -58,7 +58,8 @@ jobs:
         run: |
           git add package.json package-lock.json
           git commit -m "chore: bump version to ${{ steps.version.outputs.new_version }}"
-          git push
+          git pull --rebase origin main
+          git push origin main
 
       - name: Create Git tag
         run: |
