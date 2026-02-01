@@ -4,11 +4,69 @@ Markdownからグリッドベースのレイアウトで PowerPoint (PPTX) を�
 
 ## 特徴
 
-- 📐 **グリッドベースレイアウト** - 12×9グリッドで直感的な位置指定
+- 📐 **グリッドベースレイアウト** - 設定可能なグリッド（デフォルト12×9）で直感的な位置指定
 - 🎯 **シンプルな記法** - 位置指定は省略可能、自動レイアウト
 - 🎨 **スタイル指定** - クラスベースの柔軟なスタイリング
+- 🎬 **アニメーション対応** - PowerPointアニメーションの指定が可能（`{animation=fadein}` など）
+- 🎭 **スライド遷移** - スライド間の遷移効果を指定可能
 - 📝 **Markdown完全互換** - 標準Markdown記法をそのまま使用
 - 🧩 **Mermaid対応** - Mermaid記法の図を自動で画像化
+- 🎥 **動画埋め込み対応** - PowerPointに動画を埋め込み可能
+- 🔌 **プラグイン拡張** - カスタム機能の追加が可能
+
+## プラグイン
+
+marhupはプラグインアーキテクチャをサポートしており、独自の要素タイプや機能を追加できます。
+
+### プラグインの使用
+
+```bash
+# プラグインディレクトリを指定
+marhup input.md -o output.pptx --plugin-dir ./plugins
+```
+
+### プラグインの作成
+
+プラグインはJavaScriptまたはTypeScriptファイルとして作成します。以下はカスタム要素を追加する例：
+
+```javascript
+// plugins/custom-box.js
+import type { Plugin } from 'marhup';
+
+const plugin = {
+  name: 'custom-box',
+  version: '1.0.0',
+  elementParsers: {
+    paragraph: (token, aliases) => {
+      const text = token.text || '';
+      const match = text.match(/^:::custombox\s+(.+?)\s*:::$/);
+      if (match) {
+        return {
+          type: 'custombox',
+          content: match[1],
+        };
+      }
+      return null;
+    },
+  },
+  elementGenerators: {
+    custombox: async (element, slide, context) => {
+      slide.addText(element.content, {
+        x: context.coords.x,
+        y: context.coords.y,
+        w: context.coords.w,
+        h: context.coords.h,
+        fill: { color: 'FFFF00' }, // Yellow background
+      });
+      return [];
+    },
+  },
+};
+
+export default plugin;
+```
+
+詳細なAPIドキュメントは[プラグイン開発ガイド](docs/plugins.md)を参照してください。
 
 ## インストール
 
@@ -28,6 +86,31 @@ marhup input.md -o output.pptx --theme corporate
 # 監視モード（変更時に自動再生成）
 marhup input.md -o output.pptx --watch
 ```
+
+## ログ出力
+
+marhupは詳細なログ出力を提供し、デバッグやトラブルシューティングを支援します：
+
+```bash
+# デフォルト（infoレベル）
+marhup input.md -o output.pptx
+
+# 詳細ログ（debugレベル）
+LOG_LEVEL=debug marhup input.md -o output.pptx
+
+# 最小ログ（errorのみ）
+LOG_LEVEL=error marhup input.md -o output.pptx
+
+# ログをファイルに出力
+LOG_FILE=marhup.log marhup input.md -o output.pptx
+```
+
+ログレベル：
+- `error`: エラーのみ
+- `warn`: 警告以上
+- `info`: 情報メッセージ（デフォルト）
+- `debug`: デバッグ情報
+- `trace`: 詳細トレース
 
 ## 記法ガイド
 
@@ -64,11 +147,27 @@ aliases:
 ---
 ```
 
+または、テーマをカスタマイズ：
+
+```markdown
+---
+title: プレゼンテーション
+theme:
+  fonts:
+    title: "Times New Roman"
+    body: "Georgia"
+    code: "Consolas"
+  colors:
+    primary: "#ff6b6b"
+    text: "#2c3e50"
+---
+```
+
 | プロパティ | 説明 | デフォルト |
 |-----------|------|-----------|
 | `title` | ドキュメントタイトル | なし |
 | `grid` | グリッドサイズ（列x行） | `12x9` |
-| `theme` | テーマ名 | `default` |
+| `theme` | テーマ名またはテーマ設定オブジェクト | `default` |
 | `layout` | プリセットレイアウト | なし |
 | `aliases` | グリッド位置の別名定義 | なし |
 | `classes` | カスタムスタイルクラス | なし |
@@ -187,6 +286,323 @@ classes:
 | `grid:` | `12x9` を使用 |
 | `[位置]` | 上から順に自動配置、全幅 |
 | `{スタイル}` | テーマのデフォルト |
+
+### アニメーション指定
+
+`{animation=タイプ}` 形式でPowerPointアニメーションを指定できます：
+
+```markdown
+# タイトル {animation=appear}
+
+テキスト {animation=fade animation-delay=1}
+
+![画像](image.jpg) {animation=zoom animation-direction=left}
+
+!v[動画](video.mp4) {animation=appear}
+```
+
+#### アニメーションタイプ
+
+| タイプ | 説明 |
+|--------|------|
+| `appear` | 出現 |
+| `fade` | フェードイン/アウト |
+| `fly` | 飛んで入る |
+| `zoom` | ズーム |
+| `wipe` | ワイプ |
+| `split` | 分割 |
+| `wheel` | 車輪 |
+| `randomBars` | ランダムバー |
+| `growShrink` | 拡大縮小 |
+| `spin` | 回転 |
+| `float` | 浮遊 |
+| `shape` | シェイプ |
+| `bounce` | バウンス |
+| `pulse` | パルス |
+| `teeter` | 揺れ |
+| `blink` | 点滅 |
+| `flicker` | ちらつき |
+| `swivel` | 旋回 |
+| `spring` | スプリング |
+
+#### アニメーションオプション
+
+| オプション | 説明 | 例 |
+|-----------|------|-----|
+| `animation-delay` | 遅延時間（秒） | `animation-delay=2` |
+| `animation-duration` | 継続時間（秒） | `animation-duration=1.5` |
+| `animation-direction` | 方向 | `animation-direction=left` |
+| `animation-trigger` | トリガー | `animation-trigger=onClick` |
+| `animation-repeat` | 繰り返し回数 | `animation-repeat=3` |
+| `animation-speed` | 速度 | `animation-speed=fast` |
+
+### スライド遷移
+
+スライドごとに遷移効果を指定できます：
+
+```markdown
+---
+title: プレゼンテーション
+---
+
+# スライド1
+
+通常のスライド
+
+---
+
+# スライド2
+transition:
+  type: fade
+  duration: 1
+  speed: medium
+
+フェードイン効果のスライド
+
+---
+
+# スライド3
+transition:
+  type: push
+  direction: left
+  duration: 0.5
+
+左から押し出す効果のスライド
+```
+
+#### 遷移タイプ
+
+| タイプ | 説明 |
+|--------|------|
+| `none` | 遷移なし |
+| `fade` | フェード |
+| `push` | 押し出し |
+| `wipe` | ワイプ |
+| `split` | 分割 |
+| `reveal` | 現れる |
+| `randomBars` | ランダムバー |
+| `shape` | シェイプ |
+| `uncover` | アンカバー |
+| `cover` | カバー |
+| `flash` | フラッシュ |
+| `checker` | チェッカー |
+| `blinds` | ブラインド |
+| `clock` | 時計 |
+| `ripple` | リップル |
+| `honeycomb` | ハニカム |
+| `glitter` | グリッター |
+| `sphere` | スフィア |
+| `newsflash` | ニュースフラッシュ |
+| `plus` | プラス |
+| `diamond` | ダイヤモンド |
+| `wedge` | ウェッジ |
+| `wheel` | 車輪 |
+| `circle` | 円 |
+| `box` | ボックス |
+| `zoom` | ズーム |
+| `dissolve` | 溶解 |
+
+#### 遷移オプション
+
+| オプション | 説明 | 例 |
+|-----------|------|-----|
+| `type` | 遷移タイプ | `type: fade` |
+| `duration` | 継続時間（秒） | `duration: 1` |
+| `direction` | 方向 | `direction: left` |
+| `speed` | 速度 | `speed: medium` |
+
+## 高度な機能
+
+### 高度なテーマカスタマイズ
+
+marhupでは、Front Matterでテーマを詳細にカスタマイズできます。デフォルトテーマをベースに、色、フォント、フォントサイズ、グラデーションなどを上書きできます。
+
+#### テーマ設定の構造
+
+```yaml
+---
+theme:
+  colors:
+    primary: '#ff6b6b'      # メインカラー
+    secondary: '#4ecdc4'    # セカンダリカラー
+    accent: '#ffe66d'       # アクセントカラー
+    background: '#ffffff'   # 背景色
+    text: '#2c3e50'         # テキスト色
+  fonts:
+    title: 'Times New Roman'  # タイトルフォント
+    body: 'Georgia'           # 本文フォント
+    code: 'Consolas'          # コードフォント
+  fontSize:
+    h1: 44                    # H1サイズ
+    h2: 32                    # H2サイズ
+    h3: 28                    # H3サイズ
+    body: 20                  # 本文サイズ
+    small: 16                 # 小サイズ
+  slideMaster:
+    backgroundColor: '#ffffff'
+    margin:
+      top: 0.5
+      bottom: 0.5
+      left: 0.5
+      right: 0.5
+---
+```
+
+#### カラーテーマの例
+
+```markdown
+---
+theme:
+  colors:
+    primary: '#e74c3c'    # 赤系
+    secondary: '#95a5a6'  # グレー
+    accent: '#f39c12'     # オレンジ
+    background: '#ecf0f1' # ライトグレー
+    text: '#2c3e50'       # ダーク
+---
+
+# 企業プレゼンテーション [1-12, 1]
+
+[1-6, 2-8]
+## 製品概要
+{.primary}  <!-- プライマリカラーのテキスト -->
+
+[7-12, 2-8]
+## 特徴
+- 高品質
+- 信頼性
+- 使いやすさ
+```
+
+#### フォントテーマの例
+
+```markdown
+---
+theme:
+  fonts:
+    title: 'Arial Black'
+    body: 'Arial'
+    code: 'Courier New'
+  fontSize:
+    h1: 48
+    h2: 36
+    body: 24
+---
+
+# モダンスタイル [1-12, 1]
+
+本文はArialフォントで大きめに表示されます。
+```
+
+### 高度なアニメーション
+
+アニメーションは要素ごとに細かく制御できます。複数のオプションを組み合わせることで、プロフェッショナルなプレゼンテーションを作成できます。
+
+#### アニメーションのタイミング制御
+
+```markdown
+# タイトル {animation=appear animation-delay=0}
+
+## サブタイトル {animation=fade animation-delay=0.5}
+
+- 項目1 {animation=fly animation-direction=left animation-delay=1}
+- 項目2 {animation=fly animation-direction=left animation-delay=1.2}
+- 項目3 {animation=fly animation-direction=left animation-delay=1.4}
+
+![グラフ](chart.png) {animation=zoom animation-delay=2 animation-duration=1.5}
+```
+
+#### トリガーと繰り返し
+
+```markdown
+# クリックで開始 {animation=appear animation-trigger=onClick}
+
+# 自動再生 {animation=spin animation-repeat=3 animation-speed=fast}
+
+# 前の要素と同時 {animation=bounce animation-trigger=withPrevious}
+```
+
+#### 複雑なアニメーションシーケンス
+
+```markdown
+---
+grid: 12x9
+---
+
+# ダッシュボード表示 [1-12, 1] {animation=appear}
+
+[1-3, 2-4] {.card} {animation=fly animation-direction=left animation-delay=0.5}
+### KPI 1
+**100%**
+
+[4-6, 2-4] {.card} {animation=fly animation-direction=top animation-delay=1}
+### KPI 2
+**85%**
+
+[7-9, 2-4] {.card} {animation=zoom animation-delay=1.5}
+### KPI 3
+**92%**
+
+[10-12, 2-4] {.card} {animation=bounce animation-delay=2}
+### KPI 4
+**78%**
+
+[1-12, 5-9] {animation=fade animation-delay=2.5}
+![トレンドグラフ](./trend.png)
+```
+
+#### アニメーションの方向指定
+
+```markdown
+# 左から飛んでくる {animation=fly animation-direction=left}
+
+# 右から {animation=fly animation-direction=right}
+
+# 上から {animation=fly animation-direction=top}
+
+# 対角線 {animation=fly animation-direction=topLeft}
+
+# 回転方向 {animation=spin animation-direction=clockwise}
+```
+
+### カスタムスタイルクラスの活用
+
+Front Matterで独自のスタイルクラスを定義し、再利用できます。
+
+```markdown
+---
+classes:
+  highlight-box:
+    fill: { color: '#e3f2fd' }
+    line: { color: '#2196f3', width: 2 }
+    bold: true
+    fontSize: 24
+  warning:
+    color: '#f57c00'
+    fill: { color: '#fff3e0' }
+    bold: true
+  success:
+    color: '#388e3c'
+    fill: { color: '#e8f5e8' }
+---
+
+# プロジェクトステータス [1-12, 1]
+
+[1-4, 2-4] {.highlight-box}
+### 完了
+- 設計
+- 開発
+
+[5-8, 2-4] {.warning}
+### 進行中
+- テスト
+- ドキュメント
+
+[9-12, 2-4] {.success}
+### 予定
+- リリース
+- メンテナンス
+```
 
 ## 完全なサンプル
 
@@ -420,6 +836,7 @@ classes:
 | 段落 | ✅ |
 | 箇条書き (`-`, `*`, `1.`) | ✅ |
 | 画像 (`![](...)`) | ✅ |
+| 動画 (`!v(...)`) | ✅ |
 | 表 | ✅ |
 | コードブロック | ✅ |
 | Mermaid図 (` ```mermaid `) | ✅ |

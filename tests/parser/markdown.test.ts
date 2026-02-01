@@ -111,4 +111,62 @@ grid: 12x9
       expect(tableElement.content.rows).toHaveLength(2);
     }
   });
+
+  it('画像を解析できる', () => {
+    const md = `![Alt text](image.jpg)
+`;
+    const result = parseMarkdown(md);
+    const elements = result.slides[0].elements;
+    const imageElement = elements.find((e) => e.type === 'image');
+
+    expect(imageElement).toBeDefined();
+    expect(imageElement?.content).toBe('image.jpg');
+  });
+
+  it('動画を解析できる', () => {
+    const md = `!v[Alt text](video.mp4)
+`;
+    const result = parseMarkdown(md);
+    const elements = result.slides[0].elements;
+    const videoElement = elements.find((e) => e.type === 'video');
+
+    expect(videoElement).toBeDefined();
+    expect(videoElement?.content).toBe('video.mp4');
+  });
+
+  it('should handle invalid grid position gracefully', () => {
+    const md = `# Title [13, 1]
+
+Content
+`;
+    // Should throw GridError for invalid position
+    expect(() => parseMarkdown(md)).toThrow();
+  });
+
+  it('should handle malformed frontmatter', () => {
+    const md = `---
+invalid: yaml: syntax:
+---
+
+# Content
+`;
+    // Should handle gracefully or throw appropriate error
+    expect(() => parseMarkdown(md)).toThrow();
+  });
+
+  it('should handle empty markdown', () => {
+    const result = parseMarkdown('');
+    expect(result.slides).toHaveLength(0);
+    expect(result.globalFrontmatter).toEqual({});
+  });
+
+  it('should handle markdown with only frontmatter', () => {
+    const md = `---
+title: Test
+---
+`;
+    const result = parseMarkdown(md);
+    expect(result.slides).toHaveLength(0);
+    expect(result.globalFrontmatter.title).toBe('Test');
+  });
 });

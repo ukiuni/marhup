@@ -2,11 +2,15 @@
  * 画像要素の生成
  */
 
-import type PptxGenJS from 'pptxgenjs';
-import type { PlacedElement } from '../layout/index';
+import type { PlacedElement } from '../layout/index.js';
+import type { AnimationConfig } from '../types/index.js';
 import * as fs from 'fs';
 import * as path from 'path';
 import imageSize from 'image-size';
+import type { ISlide } from './presentation.js';
+import { t } from '../utils/i18n.js';
+import { validateAndResolvePath } from '../utils/path-validation.js';
+import { sanitizeSvg } from '../utils/sanitizer.js';
 
 interface Coordinates {
   x: number;
@@ -20,15 +24,31 @@ interface Coordinates {
  */
 function getImageDimensions(filePath: string): { width: number; height: number } | null {
   try {
-    const buffer = fs.readFileSync(filePath);
-    const dimensions = imageSize(buffer);
+    const dimensions = (imageSize as any)(filePath);
     if (dimensions.width && dimensions.height) {
       return { width: dimensions.width, height: dimensions.height };
     }
   } catch (error) {
-    console.warn('画像サイズの取得に失敗:', error);
+    console.warn(t('errors.imageSizeFailed', { error }));
   }
   return null;
+}
+
+/**
+ * SVGファイルをdata URIに変換
+ */
+function convertSvgToDataUri(filePath: string): string | null {
+  try {
+    const svgContent = fs.readFileSync(filePath, 'utf8');
+    const sanitizedSvg = sanitizeSvg(svgContent);
+    const base64 = Buffer.from(sanitizedSvg).toString('base64');
+    // メモリ解放のため、変数をnull化
+    const dataUri = `data:image/svg+xml;base64,${base64}`;
+    return dataUri;
+  } catch (error) {
+    console.warn(t('errors.svgConversionFailed', { error }));
+    return null;
+  }
 }
 
 /**
@@ -74,44 +94,61 @@ function calculateCenteredFit(
  * 画像要素を追加
  */
 export function addImageElement(
-  slide: PptxGenJS.Slide,
+  slide: ISlide,
   element: PlacedElement,
   coords: Coordinates,
   styleProps: Record<string, unknown>,
-  basePath?: string
+  basePath?: string,
+  animation?: AnimationConfig
 ): void {
   const imagePath = element.content as string;
 
   // URLかローカルファイルかを判定
   if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
     // URL画像（サイズ取得が難しいのでそのまま配置）
-    slide.addImage({
-      path: imagePath,
+    slide.addImage(imagePath, {
       x: coords.x,
       y: coords.y,
       w: coords.w,
       h: coords.h,
       sizing: { type: 'contain', w: coords.w, h: coords.h },
+      altText: element.altText,
+      animation: animation ? {
+        type: animation.type,
+        duration: animation.duration,
+        delay: animation.delay,
+      } : undefined,
     });
   } else {
     // ローカルファイル
     try {
       // ベースパスがあれば、そこからの相対パスとして解決
-      let absolutePath: string;
-      if (basePath && !path.isAbsolute(imagePath)) {
-        absolutePath = path.resolve(basePath, imagePath);
-      } else {
-        absolutePath = path.resolve(imagePath);
-      }
+      const allowedDir = basePath || process.cwd();
+      const absolutePath = validateAndResolvePath(imagePath, allowedDir, basePath);
       
       if (fs.existsSync(absolutePath)) {
-        const imageBuffer = fs.readFileSync(absolutePath);
-        const base64 = imageBuffer.toString('base64');
-        const ext = path.extname(imagePath).slice(1).toLowerCase();
-        const mimeType = getMimeType(ext);
+        // SVGファイルの場合はdata URIに変換
+        const isSvg = path.extname(absolutePath).toLowerCase() === '.svg';
+        let imageSource: string;
+        let dimensions: { width: number; height: number } | null = null;
 
-        // 画像サイズを取得してアスペクト比維持・中央配置
-        const dimensions = getImageDimensions(absolutePath);
+        if (isSvg) {
+          const dataUri = convertSvgToDataUri(absolutePath);
+          if (dataUri) {
+            imageSource = dataUri;
+            // SVGの場合はサイズを取得しようとするが、取得できなくてもそのまま使用
+            dimensions = getImageDimensions(absolutePath);
+          } else {
+            // 変換失敗時はプレースホルダー
+            addImagePlaceholder(slide, coords, imagePath);
+            return;
+          }
+        } else {
+          imageSource = absolutePath;
+          // 他の画像形式の場合はサイズを取得
+          dimensions = getImageDimensions(absolutePath);
+        }
+
         let finalCoords = coords;
 
         if (dimensions) {
@@ -125,20 +162,25 @@ export function addImageElement(
           );
         }
 
-        slide.addImage({
-          data: `data:${mimeType};base64,${base64}`,
+        slide.addImage(imageSource, {
           x: finalCoords.x,
           y: finalCoords.y,
           w: finalCoords.w,
           h: finalCoords.h,
+          altText: element.altText,
+          animation: animation ? {
+            type: animation.type,
+            duration: animation.duration,
+            delay: animation.delay,
+          } : undefined,
         });
       } else {
         // ファイルが存在しない場合はプレースホルダーを表示
-        console.warn('画像が見つかりません:', absolutePath);
+        console.warn(t('errors.imageNotFound', { path: absolutePath }));
         addImagePlaceholder(slide, coords, imagePath);
       }
     } catch (error) {
-      console.warn('画像の読み込みに失敗しました:', imagePath, error);
+      console.warn(t('errors.imageLoadFailed', { path: imagePath, error }));
       addImagePlaceholder(slide, coords, imagePath);
     }
   }
@@ -148,7 +190,7 @@ export function addImageElement(
  * 画像プレースホルダーを追加
  */
 function addImagePlaceholder(
-  slide: PptxGenJS.Slide,
+  slide: ISlide,
   coords: Coordinates,
   imagePath: string
 ): void {
@@ -158,7 +200,7 @@ function addImagePlaceholder(
     w: coords.w,
     h: coords.h,
     fill: { color: 'f0f0f0' },
-    line: { color: 'cccccc', width: 1 },
+    line: 'cccccc',
   });
 
   slide.addText(`[Image: ${imagePath}]`, {
@@ -173,17 +215,4 @@ function addImagePlaceholder(
   });
 }
 
-/**
- * 拡張子からMIMEタイプを取得
- */
-function getMimeType(ext: string): string {
-  const mimeTypes: Record<string, string> = {
-    png: 'image/png',
-    jpg: 'image/jpeg',
-    jpeg: 'image/jpeg',
-    gif: 'image/gif',
-    svg: 'image/svg+xml',
-    webp: 'image/webp',
-  };
-  return mimeTypes[ext] || 'image/png';
-}
+

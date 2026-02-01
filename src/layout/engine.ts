@@ -6,24 +6,27 @@ import type { Slide, GridConfig, SlideFrontmatter } from '../types/index.js';
 import { parseGridString } from '../parser/frontmatter.js';
 import { autoPlaceElements } from './auto.js';
 import type { PlacedElement, LayoutResult } from './types.js';
-
-// デフォルトグリッド
-const _DEFAULT_GRID: GridConfig = { cols: 12, rows: 9 };
+import logger from '../utils/logger.js';
 
 /**
  * スライドのレイアウトを計算
  */
 export function layoutSlide(
   slide: Slide,
-  globalFrontmatter: SlideFrontmatter
+  globalFrontmatter: SlideFrontmatter,
+  slideIndex?: number
 ): LayoutResult {
+  logger.debug('Calculating slide layout', { slideIndex, elementCount: slide.elements.length });
+
   // グリッド設定を決定（スライド個別 > グローバル > デフォルト）
   const gridStr =
     slide.frontmatter.grid || globalFrontmatter.grid || '12x9';
   const grid = parseGridString(gridStr);
+  logger.debug('Using grid configuration', { gridStr, grid });
 
   // 要素を配置
-  const elements = autoPlaceElements(slide.elements, grid);
+  const elements = autoPlaceElements(slide.elements, grid, slideIndex);
+  logger.debug(`Auto-placed ${elements.length} elements`);
 
   // グリッドマップを作成（デバッグ用）
   const gridMap = createGridMapFromElements(elements, grid);

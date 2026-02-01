@@ -1,0 +1,29 @@
+name: custom
+colors:
+  primary: '#ff6b6b'
+  secondary: '#4ecdc4'
+  accent: '#45b7d1'
+  background: '#f7f7f7'
+  text: '#2c3e50'
+fonts:
+  title: 'Arial Black'
+  body: 'Helvetica'
+  code: 'Consolas'
+fontSize:
+  h1: 44
+  h2: 32
+  h3: 28
+  body: 20
+  small: 16
+gradients:
+  background:
+    type: 'linear'
+    colors: ['#f7f7f7', '#e8e8e8']
+    angle: 135
+slideMaster:
+  backgroundColor: '#f7f7f7'
+  margin:
+    top: 0.8
+    bottom: 0.8
+    left: 0.8
+    right: 0.8

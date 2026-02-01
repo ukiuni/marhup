@@ -1,0 +1,178 @@
+{
+  "cli": {
+    "name": "marhup",
+    "description": "Markdownからグリッドベースのレイアウトで PowerPoint (PPTX) を生成",
+    "version": "0.1.7",
+    "options": {
+      "output": "出力ファイル名（単一ファイルの場合のみ）",
+      "outputDir": "出力ディレクトリ（複数ファイルの場合）",
+      "theme": "テーマ名",
+      "grid": "デフォルトグリッドサイズ",
+      "watch": "監視モード",
+      "config": "設定ファイルのパス",
+      "inputFiles": "入力Markdownファイル（複数可）"
+    },
+    "examples": {
+      "basic": "$ marhup input.md -o presentation.pptx",
+      "theme": "$ marhup input.md --theme corporate --grid 16x10",
+      "watch": "$ marhup input.md --watch",
+      "batch": "$ marhup file1.md file2.md file3.md -d ./presentations"
+    },
+    "commands": {
+      "generate": {
+        "description": "MarkdownからPPTXを生成",
+        "examples": {
+          "basic": "$ marhup generate input.md -o presentation.pptx",
+          "theme": "$ marhup generate input.md --theme corporate --grid 16x10",
+          "batch": "$ marhup generate file1.md file2.md file3.md -d ./presentations"
+        }
+      },
+      "undo": {
+        "description": "最後の生成を元に戻す",
+        "examples": {
+          "basic": "$ marhup undo output.pptx"
+        },
+        "note": "最後の生成時に作成されたバックアップファイルから復元します。"
+      },
+      "export": {
+        "description": "MarkdownをパースしてJSONとしてエクスポート",
+        "examples": {
+          "basic": "$ marhup export input.md -o document.json"
+        }
+      },
+      "import": {
+        "description": "JSONからPPTXを生成",
+        "examples": {
+          "basic": "$ marhup import document.json -o presentation.pptx"
+        }
+      },
+      "preview": {
+        "description": "Markdownのレイアウトをプレビュー表示",
+        "examples": {
+          "basic": "$ marhup preview input.md",
+          "grid": "$ marhup preview input.md --grid 16x10"
+        }
+      },
+      "watch": {
+        "description": "ファイルを監視して自動再生成",
+        "examples": {
+          "basic": "$ marhup watch input.md -o presentation.pptx",
+          "theme": "$ marhup watch input.md --theme corporate"
+        },
+        "note": "監視モードでは、入力ファイルを変更すると自動的に再生成されます。\nCtrl+C で終了します。"
+      },
+      "help": {
+        "description": "詳細な使い方と記法ガイドを表示"
+      }
+    },
+    "messages": {
+      "converting": "📝 {{input}} を変換中...",
+      "generationComplete": "✅ 生成完了: {{output}}",
+      "batchProcessing": "📝 {{count}} ファイルをバッチ処理中...",
+      "batchComplete": "✅ バッチ処理完了: {{success}} 成功, {{error}} 失敗",
+      "fileNotFound": "エラー: ファイルが見つかりません:",
+      "invalidPath": "エラー: 無効なパス: {{path}} - {{error}}",
+      "configPathInvalid": "⚠️ 無効な設定パス: {{configPath}} - {{error}}",
+      "configLoadFailed": "⚠️ 設定ファイルの読み込みに失敗しました: {{configPath}}",
+      "configLoadError": "   {{error}}",
+      "outputDirIgnoreWarning": "⚠️  複数ファイルの場合は -o オプションは無視されます。-d オプションを使用してください。",
+      "watchSingleFileOnly": "❌ watchモードは単一ファイルのみサポートします。",
+      "backupSearchFailed": "❌ バックアップファイルの検索に失敗しました: {{error}}",
+      "noBackupFound": "❌ バックアップが見つかりません",
+      "undoComplete": "✅ 元に戻しました: {{output}}",
+      "exportComplete": "✅ エクスポート完了: {{output}}",
+      "initialConversion": "📝 初期変換: {{input}}",
+      "regenerationComplete": "✅ 再生成完了: {{output}}",
+      "changeDetected": "\n🔄 変更を検出: {{input}}",
+      "watchModeStarted": "\n👀 監視モード開始... (Ctrl+C で終了)",
+      "layoutPreview": "📋 レイアウトプレビュー: {{input}}\n",
+      "processingFromJson": "📝 {{input}} から変換中...",
+      "batchItem": "  {{index}}/{{total}}: {{input}} → {{output}}",
+      "batchItemSuccess": "  [{{index}}/{{total}}] {{input}} → {{output}}",
+      "batchItemError": "❌ 失敗: {{input}}",
+      "configLoadWarning": "⚠️ 設定ファイルの読み込みに失敗しました: {{path}}"
+    },
+    "help": {
+      "title": "# marhup - MarkdownからPowerPoint生成ツール",
+      "basicUsage": "## 基本的な使い方",
+      "codeExamples": {
+        "basic": "marhup input.md -o output.pptx",
+        "theme": "marhup input.md -o output.pptx --theme corporate",
+        "watch": "marhup input.md -o output.pptx --watch",
+        "batch": "marhup file1.md file2.md file3.md -d ./presentations",
+        "config": "marhup input.md --config .marhuprc.json"
+      },
+      "configFiles": "## 設定ファイル",
+      "supportedFiles": "### サポートされるファイル名",
+      "configExamples": "### 設定例",
+      "syntaxGuide": "## 記法ガイド",
+      "slideSeparation": "### スライドの区切り",
+      "frontMatter": "### Front Matter",
+      "availableCommands": "## 利用可能なコマンド",
+      "availableStyles": "## 利用可能なスタイルクラス",
+      "animations": "## アニメーション",
+      "documentation": "詳細なドキュメント: https://github.com/ukiuni/marhup"
+    }
+  },
+  "errors": {
+    "fileNotFound": "ファイルが見つかりません",
+    "configLoadFailed": "設定ファイルの読み込みに失敗しました",
+    "backupSearchFailed": "バックアップファイルの検索に失敗しました",
+    "noBackupFound": "バックアップが見つかりません",
+    "gridError": "グリッドエラー",
+    "parseError": "パースエラー",
+    "generationError": "生成エラー",
+    "frontmatterError": "Front Matterエラー",
+    "unknownError": "不明なエラー",
+    "checkInputAndTryAgain": "入力ファイルを確認して再度お試しください。",
+    "processingFailed": "処理に失敗しました",
+    "duringPptxGeneration": "PPTX生成中",
+    "duringJsonExport": "JSONエクスポート中",
+    "duringPptxGenerationFromJson": "JSONからのPPTX生成中",
+    "duringLayoutPreview": "レイアウトプレビュー中",
+    "duringWatchModeRegeneration": "監視モード再生成中",
+    "duringInitialConversion": "監視モード初期変換中",
+    "duringProcessing": "処理中",
+    "processingFailed": "処理に失敗しました",
+    "duringPptxGeneration": "PPTX生成中",
+    "duringJsonExport": "JSONエクスポート中",
+    "duringPptxGenerationFromJson": "JSONからのPPTX生成中",
+    "duringLayoutPreview": "レイアウトプレビュー中",
+    "duringWatchModeRegeneration": "監視モード再生成中",
+    "duringInitialConversion": "監視モード初期変換中",
+    "duringProcessing": "処理中",
+    "inputFileNotFound": "入力ファイルが見つかりません: {{path}}",
+    "suggestionCheckFilePath": "ファイルパスが正しいか、ファイルが存在するか確認してください。",
+    "fileInUse": "ファイルが他のプロセスによって使用中です: {{path}}",
+    "suggestionWaitOrChangeOutput": "他のmarhupプロセスが完了するまで待つか、別の出力ファイル名を指定してください。",
+    "videoNotFound": "動画が見つかりません: {{path}}",
+    "errorPrefix": "エラー: {{message}}",
+    "cleanupTempDirFailed": "一時ディレクトリのクリーンアップに失敗しました: {{error}}",
+    "mermaidGenerationFailed": "Mermaid図の生成に失敗しました: {{error}}",
+    "cleanupTempFileFailed": "一時ファイルのクリーンアップに失敗しました: {{error}}",
+    "mermaidSvgGenerationFailed": "Mermaid SVG生成に失敗: {{error}}",
+    "videoLoadFailed": "動画の読み込みに失敗しました: {{path}}, {{error}}",
+    "imageSizeFailed": "画像サイズの取得に失敗: {{error}}",
+    "svgConversionFailed": "SVGの変換に失敗: {{error}}",
+    "imageLoadFailed": "画像の読み込みに失敗しました: {{path}}, {{error}}",
+    "lockFileDeletionFailed": "ロックファイルの削除に失敗しました: {{error}}",
+    "imageNotFound": "画像が見つかりません: {{path}}",
+    "requiredParameters": "必須パラメータ: {{params}}",
+    "specifyBothMarkdownAndOutputPath": "リクエストに markdown と outputPath の両方を指定してください。",
+    "specifyBothInputPathAndOutputPath": "リクエストに inputPath と outputPath の両方を指定してください。",
+    "grid": {
+      "columnStartOutOfRange": "列の開始位置 {{colStart}} が範囲外です (1-{{cols}})",
+      "columnEndOutOfRange": "列の終了位置 {{colEnd}} が範囲外です (1-{{cols}})",
+      "rowStartOutOfRange": "行の開始位置 {{rowStart}} が範囲外です (1-{{rows}})",
+      "rowEndOutOfRange": "行の終了位置 {{rowEnd}} が範囲外です (1-{{rows}})",
+      "columnStartGreaterThanEnd": "列の開始位置 {{colStart}} が終了位置 {{colEnd}} より大きいです",
+      "rowStartGreaterThanEnd": "行の開始位置 {{rowStart}} が終了位置 {{rowEnd}} より大きいです",
+      "useColumnNumbers": "グリッドサイズに合わせて1から{{cols}}までの列番号を使用してください",
+      "useRowNumbers": "グリッドサイズに合わせて1から{{rows}}までの行番号を使用してください",
+      "columnStartShouldBeLessThanEnd": "開始列番号が終了列番号以下であることを確認してください",
+      "rowStartShouldBeLessThanEnd": "開始行番号が終了行番号以下であることを確認してください",
+      "positionOccupied": "この位置は既に他の要素によって使用されています",
+      "tryDifferentPosition": "{{type}}要素に別の位置を指定してください"
+    }
+  }
+}

@@ -5,7 +5,9 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { marhup, marhupFile } from './index';
+import { marhup, marhupFile } from './index.js';
+import { MarhupError } from './errors.js';
+import { t } from './utils/i18n.js';
 
 export interface ToolResult {
   content: { type: string; text: string }[];
@@ -228,7 +230,11 @@ export async function handleToolCall(
         };
 
         if (!markdown || !outputPath) {
-          throw new Error('markdown と outputPath は必須パラメータです');
+          throw new MarhupError(
+            t('errors.requiredParameters', { params: 'markdown and outputPath' }),
+            'MISSING_PARAMETERS',
+            t('errors.specifyBothMarkdownAndOutputPath')
+          );
         }
 
         // 出力ディレクトリが存在しない場合は作成
@@ -259,11 +265,20 @@ export async function handleToolCall(
         };
 
         if (!inputPath || !outputPath) {
-          throw new Error('inputPath と outputPath は必須パラメータです');
+          throw new MarhupError(
+            t('errors.requiredParameters', { params: 'inputPath and outputPath' }),
+            'MISSING_PARAMETERS',
+            t('errors.specifyBothInputPathAndOutputPath')
+          );
         }
 
         if (!fs.existsSync(inputPath)) {
-          throw new Error(`入力ファイルが見つかりません: ${inputPath}`);
+          throw new MarhupError(
+            t('errors.inputFileNotFound', { path: inputPath }),
+            'FILE_NOT_FOUND',
+            t('errors.suggestionCheckFilePath'),
+            inputPath
+          );
         }
 
         // 出力ディレクトリが存在しない場合は作成
@@ -299,12 +314,12 @@ export async function handleToolCall(
         throw new Error(`Unknown tool: ${name}`);
     }
   } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorMessage = error instanceof MarhupError ? error.toString() : (error instanceof Error ? error.message : String(error));
     return {
       content: [
         {
           type: 'text',
-          text: `エラー: ${errorMessage}`,
+          text: t('errors.errorPrefix', { message: errorMessage }),
         },
       ],
       isError: true,

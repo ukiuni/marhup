@@ -9,6 +9,7 @@ import {
   extractGridAndStyle,
   parseBlockGridLine,
 } from '../../src/parser/grid.js';
+import { GridError } from '../../src/errors.js';
 
 describe('extractGridPosition', () => {
   it('単一セルの位置を抽出できる', () => {
@@ -69,6 +70,47 @@ describe('extractGridPosition', () => {
     expect(result.position).toBeUndefined();
     expect(result.cleanText).toBe('テキストのみ');
   });
+
+  it('不正なグリッド記法は無視される', () => {
+    const result = extractGridPosition('テキスト [1-6, 2-8 無効]');
+    expect(result.position).toBeUndefined();
+    expect(result.cleanText).toBe('テキスト [1-6, 2-8 無効]');
+  });
+
+  it('存在しない別名は無視される', () => {
+    const aliases = { title: '[1-12, 1]' };
+    const result = extractGridPosition('テキスト [nonexistent]', aliases);
+    expect(result.position).toBeUndefined();
+    expect(result.cleanText).toBe('テキスト [nonexistent]');
+  });
+
+  it('別名の再帰的解決', () => {
+    const aliases = { title: '[header]', header: '[1-12, 1]' };
+    const result = extractGridPosition('テキスト [title]', aliases);
+    expect(result.position).toEqual({
+      colStart: 1,
+      colEnd: 12,
+      rowStart: 1,
+      rowEnd: 1,
+    });
+    expect(result.cleanText).toBe('テキスト');
+  });
+
+  it('境界外の列はエラーを投げる', () => {
+    expect(() => extractGridPosition('テキスト [13, 5]')).toThrow(GridError);
+  });
+
+  it('境界外の行はエラーを投げる', () => {
+    expect(() => extractGridPosition('テキスト [3, 10]')).toThrow(GridError);
+  });
+
+  it('0始まりの列はエラーを投げる', () => {
+    expect(() => extractGridPosition('テキスト [0-12, 1-9]')).toThrow(GridError);
+  });
+
+  it('逆順の範囲はエラーを投げる', () => {
+    expect(() => extractGridPosition('テキスト [6-1, 2]')).toThrow(GridError);
+  });
 });
 
 describe('extractStyle', () => {
@@ -98,11 +140,35 @@ describe('extractStyle', () => {
     const result = extractStyle('テキストのみ');
     expect(result.style).toBeUndefined();
   });
+
+  it('コロン区切りのプロパティを抽出できる', () => {
+    const result = extractStyle('テキスト {bg:#f0f0f0 color:red}');
+    expect(result.style?.properties).toEqual({ bg: '#f0f0f0', color: 'red' });
+  });
+
+  it('アニメーションを抽出できる', () => {
+    const result = extractStyle('テキスト {animation=fadein}');
+    expect(result.style?.animation).toEqual({ type: 'fadein' });
+    expect(result.cleanText).toBe('テキスト');
+  });
+
+  it('アニメーションとプロパティを抽出できる', () => {
+    const result = extractStyle('テキスト {animation=flyin duration=1}');
+    expect(result.style?.animation).toEqual({ type: 'flyin', duration: 1000 });
+    expect(result.cleanText).toBe('テキスト');
+  });
+
+  it('不正なスタイル記法は空のスタイルを返す', () => {
+    const result = extractStyle('テキスト {無効なスタイル}');
+    expect(result.style?.classes).toEqual([]);
+    expect(result.style?.properties).toEqual({});
+    expect(result.cleanText).toBe('テキスト');
+  });
 });
 
 describe('extractGridAndStyle', () => {
-  it('位置とスタイルを両方抽出できる', () => {
-    const result = extractGridAndStyle('# タイトル [1-12, 1] {.center}');
+  it('位置とスタイルとアニメーションを両方抽出できる', () => {
+    const result = extractGridAndStyle('# タイトル [1-12, 1] {.center animation=fadein}');
     expect(result.position).toEqual({
       colStart: 1,
       colEnd: 12,
@@ -110,20 +176,22 @@ describe('extractGridAndStyle', () => {
       rowEnd: 1,
     });
     expect(result.style?.classes).toEqual(['center']);
+    expect(result.animation).toEqual({ type: 'fadein' });
     expect(result.cleanText).toBe('# タイトル');
   });
 
-  it('別名とスタイルを両方抽出できる', () => {
-    const aliases = { title: '[1-12, 1]' };
-    const result = extractGridAndStyle('# タイトル [title] {.center}', aliases);
-    expect(result.position).toEqual({
-      colStart: 1,
-      colEnd: 12,
-      rowStart: 1,
-      rowEnd: 1,
-    });
-    expect(result.style?.classes).toEqual(['center']);
-    expect(result.cleanText).toBe('# タイトル');
+  it('アニメーションのみを抽出できる', () => {
+    const result = extractGridAndStyle('テキスト {animation=flyin}');
+    expect(result.position).toBeUndefined();
+    expect(result.style).toBeUndefined();
+    expect(result.animation).toEqual({ type: 'flyin' });
+    expect(result.cleanText).toBe('テキスト');
+  });
+
+  it('アニメーションとプロパティを抽出できる', () => {
+    const result = extractGridAndStyle('テキスト {animation=zoom duration=1 delay=0.5}');
+    expect(result.animation).toEqual({ type: 'zoom', duration: 1000, delay: 500 });
+    expect(result.cleanText).toBe('テキスト');
   });
 });
 
@@ -159,6 +227,17 @@ describe('parseBlockGridLine', () => {
 
   it('通常のテキストはグリッドブロックではない', () => {
     const result = parseBlockGridLine('普通のテキスト');
+    expect(result.isGridBlock).toBe(false);
+  });
+
+  it('不正なグリッドブロックは認識されない', () => {
+    const result = parseBlockGridLine('[1-6, 2-8 無効]');
+    expect(result.isGridBlock).toBe(false);
+  });
+
+  it('別名が存在しない場合はグリッドブロックではない', () => {
+    const aliases = { title: '[1-12, 1]' };
+    const result = parseBlockGridLine('[nonexistent]', aliases);
     expect(result.isGridBlock).toBe(false);
   });
 });

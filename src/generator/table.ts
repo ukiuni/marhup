@@ -2,10 +2,9 @@
  * テーブル要素の生成
  */
 
-import type PptxGenJS from 'pptxgenjs';
-import type { PlacedElement } from '../layout/index';
-import type { TableData } from '../types/index';
-import { defaultTheme } from '../theme/index';
+import type { PlacedElement } from '../layout/index.js';
+import type { TableData, ThemeConfig, AnimationConfig } from '../types/index.js';
+import type { ISlide } from './presentation.js';
 
 interface Coordinates {
   x: number;
@@ -18,50 +17,31 @@ interface Coordinates {
  * テーブル要素を追加
  */
 export function addTableElement(
-  slide: PptxGenJS.Slide,
+  slide: ISlide,
   element: PlacedElement,
   coords: Coordinates,
-  _styleProps: Record<string, unknown>
+  _styleProps: Record<string, unknown>,
+  theme: ThemeConfig,
+  animation?: AnimationConfig
 ): void {
   const tableData = element.content as TableData;
 
-  // ヘッダー行
-  const headerRow: PptxGenJS.TableCell[] = tableData.headers.map((header) => ({
-    text: header,
-    options: {
-      fill: { color: defaultTheme.colors.primary.replace('#', '') },
-      color: 'ffffff',
-      bold: true,
-      fontSize: defaultTheme.fontSize.body - 2,
-      fontFace: defaultTheme.fonts.body,
-      align: 'center',
-      valign: 'middle',
-    },
-  }));
+  // Convert to simple string array for abstraction
+  const rows: string[][] = [
+    tableData.headers,
+    ...tableData.rows
+  ];
 
-  // データ行
-  const dataRows: PptxGenJS.TableCell[][] = tableData.rows.map((row, rowIndex) =>
-    row.map((cell) => ({
-      text: cell,
-      options: {
-        fill: { color: rowIndex % 2 === 0 ? 'ffffff' : 'f8fafc' },
-        color: defaultTheme.colors.text.replace('#', ''),
-        fontSize: defaultTheme.fontSize.body - 2,
-        fontFace: defaultTheme.fonts.body,
-        align: 'left',
-        valign: 'middle',
-      },
-    }))
-  );
-
-  const allRows = [headerRow, ...dataRows];
-
-  slide.addTable(allRows, {
+  slide.addTable(rows, {
     x: coords.x,
     y: coords.y,
     w: coords.w,
     h: coords.h,
-    border: { type: 'solid', color: 'e2e8f0', pt: 1 },
     colW: Array(tableData.headers.length).fill(coords.w / tableData.headers.length),
+    animation: animation ? {
+      type: animation.type,
+      duration: animation.duration,
+      delay: animation.delay,
+    } : undefined,
   });
 }

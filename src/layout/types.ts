@@ -11,6 +11,7 @@ export interface PlacedElement {
   level?: number;
   position: GridPosition;
   style?: StyleOptions;
+  altText?: string; // 画像の代替テキスト
   raw?: string;
 }
 

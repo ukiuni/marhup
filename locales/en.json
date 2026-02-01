@@ -1,0 +1,171 @@
+{
+  "cli": {
+    "name": "marhup",
+    "description": "Generate PowerPoint (PPTX) from Markdown with grid-based layout",
+    "version": "0.1.7",
+    "options": {
+      "output": "Output file name (single file only)",
+      "outputDir": "Output directory (for multiple files)",
+      "theme": "Theme name",
+      "grid": "Default grid size",
+      "watch": "Watch mode",
+      "config": "Path to configuration file",
+      "inputFiles": "Input Markdown files (multiple allowed)"
+    },
+    "examples": {
+      "basic": "$ marhup input.md -o presentation.pptx",
+      "theme": "$ marhup input.md --theme corporate --grid 16x10",
+      "watch": "$ marhup input.md --watch",
+      "batch": "$ marhup file1.md file2.md file3.md -d ./presentations"
+    },
+    "commands": {
+      "generate": {
+        "description": "Generate PPTX from Markdown",
+        "examples": {
+          "basic": "$ marhup generate input.md -o presentation.pptx",
+          "theme": "$ marhup generate input.md --theme corporate --grid 16x10",
+          "batch": "$ marhup generate file1.md file2.md file3.md -d ./presentations"
+        }
+      },
+      "undo": {
+        "description": "Undo the last generation",
+        "examples": {
+          "basic": "$ marhup undo output.pptx"
+        },
+        "note": "Restores from the backup file created during the last generation."
+      },
+      "export": {
+        "description": "Parse Markdown and export as JSON",
+        "examples": {
+          "basic": "$ marhup export input.md -o document.json"
+        }
+      },
+      "import": {
+        "description": "Generate PPTX from JSON",
+        "examples": {
+          "basic": "$ marhup import document.json -o presentation.pptx"
+        }
+      },
+      "preview": {
+        "description": "Preview Markdown layout",
+        "examples": {
+          "basic": "$ marhup preview input.md",
+          "grid": "$ marhup preview input.md --grid 16x10"
+        }
+      },
+      "watch": {
+        "description": "Watch file and auto-regenerate",
+        "examples": {
+          "basic": "$ marhup watch input.md -o presentation.pptx",
+          "theme": "$ marhup watch input.md --theme corporate"
+        },
+        "note": "In watch mode, files are automatically regenerated when the input file changes. Press Ctrl+C to exit."
+      },
+      "help": {
+        "description": "Show detailed usage and syntax guide"
+      }
+    },
+    "messages": {
+      "converting": "Converting {{input}}...",
+      "generationComplete": "Generation complete: {{output}}",
+      "batchProcessing": "Batch processing {{count}} files...",
+      "batchComplete": "Batch processing complete: {{success}} successful, {{error}} failed",
+      "fileNotFound": "Error: File not found:",
+      "invalidPath": "Error: Invalid path: {{path}} - {{error}}",
+      "configPathInvalid": "⚠️ Invalid config path: {{configPath}} - {{error}}",
+      "configLoadFailed": "⚠️  Failed to load configuration file: {{configPath}}",
+      "configLoadError": "   {{error}}",
+      "outputDirIgnoreWarning": "⚠️  -o option is ignored for multiple files. Use -d option.",
+      "outputDirIgnoreWarning": "⚠️  -o option is ignored for multiple files. Use -d option.",
+      "watchSingleFileOnly": "❌ Watch mode supports single file only.",
+      "backupSearchFailed": "❌ Failed to search backup files: {{error}}",
+      "noBackupFound": "❌ No backup found",
+      "undoComplete": "✅ Restored: {{output}}",
+      "exportComplete": "✅ Export complete: {{output}}",
+      "initialConversion": "Initial conversion: {{input}}",
+      "regenerationComplete": "✅ Regeneration complete: {{output}}",
+      "changeDetected": "🔄 Change detected: {{input}}",
+      "watchModeStarted": "👀 Watch mode started... (Ctrl+C to exit)",
+      "layoutPreview": "📋 Layout preview: {{input}}",
+      "processingFromJson": "📝 Converting from {{input}}...",
+      "batchItem": "  {{index}}/{{total}}: {{input}} → {{output}}",
+      "batchItemSuccess": "  [{{index}}/{{total}}] {{input}} → {{output}}",
+      "batchItemError": "❌ Failed: {{input}}",
+      "configLoadWarning": "⚠️ Failed to load config file: {{path}}"
+    },
+    "help": {
+      "title": "# marhup - Markdown to PowerPoint Generation Tool",
+      "basicUsage": "## Basic Usage",
+      "codeExamples": {
+        "basic": "marhup input.md -o output.pptx",
+        "theme": "marhup input.md -o output.pptx --theme corporate",
+        "watch": "marhup input.md -o output.pptx --watch",
+        "batch": "marhup file1.md file2.md file3.md -d ./presentations",
+        "config": "marhup input.md --config .marhuprc.json"
+      },
+      "configFiles": "## Configuration Files",
+      "supportedFiles": "### Supported File Names",
+      "configExamples": "### Configuration Examples",
+      "syntaxGuide": "## Syntax Guide",
+      "slideSeparation": "### Slide Separation",
+      "frontMatter": "### Front Matter",
+      "availableCommands": "## Available Commands",
+      "availableStyles": "## Available Style Classes",
+      "animations": "## Animations",
+      "documentation": "Detailed documentation: https://github.com/ukiuni/marhup"
+    }
+  },
+  "errors": {
+    "fileNotFound": "File not found",
+    "configLoadFailed": "Failed to load configuration file",
+    "backupSearchFailed": "Failed to search backup files",
+    "noBackupFound": "No backup found",
+    "gridError": "Grid error",
+    "parseError": "Parse error",
+    "generationError": "Generation error",
+    "frontmatterError": "Front Matter error",
+    "unknownError": "Unknown error",
+    "checkInputAndTryAgain": "Check your input file and try again.",
+    "processingFailed": "Processing failed",
+    "duringPptxGeneration": "during PPTX generation",
+    "duringJsonExport": "during JSON export",
+    "duringPptxGenerationFromJson": "during PPTX generation from JSON",
+    "duringLayoutPreview": "during layout preview",
+    "duringWatchModeRegeneration": "during watch mode regeneration",
+    "duringInitialConversion": "during initial conversion in watch mode",
+    "duringProcessing": "during processing",
+    "inputFileNotFound": "Input file not found: {{path}}",
+    "suggestionCheckFilePath": "Please check if the file path is correct and the file exists.",
+    "fileInUse": "File is being used by another process: {{path}}",
+    "suggestionWaitOrChangeOutput": "Please wait for other marhup processes to complete or specify a different output file name.",
+    "videoNotFound": "Video not found: {{path}}",
+    "errorPrefix": "Error: {{message}}",
+    "cleanupTempDirFailed": "Failed to cleanup temporary directory: {{error}}",
+    "mermaidGenerationFailed": "Failed to generate Mermaid diagram: {{error}}",
+    "cleanupTempFileFailed": "Failed to cleanup temporary file: {{error}}",
+    "mermaidSvgGenerationFailed": "Failed to generate Mermaid SVG: {{error}}",
+    "videoLoadFailed": "Failed to load video: {{path}}, {{error}}",
+    "imageSizeFailed": "Failed to get image size: {{error}}",
+    "svgConversionFailed": "Failed to convert SVG: {{error}}",
+    "imageLoadFailed": "Failed to load image: {{path}}, {{error}}",
+    "lockFileDeletionFailed": "Failed to delete lock file: {{error}}",
+    "imageNotFound": "Image not found: {{path}}",
+    "requiredParameters": "Required parameters: {{params}}",
+    "specifyBothMarkdownAndOutputPath": "Please specify both markdown and outputPath in the request.",
+    "specifyBothInputPathAndOutputPath": "Please specify both inputPath and outputPath in the request.",
+    "grid": {
+      "columnStartOutOfRange": "Column start {{colStart}} is out of range (1-{{cols}})",
+      "columnEndOutOfRange": "Column end {{colEnd}} is out of range (1-{{cols}})",
+      "rowStartOutOfRange": "Row start {{rowStart}} is out of range (1-{{rows}})",
+      "rowEndOutOfRange": "Row end {{rowEnd}} is out of range (1-{{rows}})",
+      "columnStartGreaterThanEnd": "Column start {{colStart}} cannot be greater than column end {{colEnd}}",
+      "rowStartGreaterThanEnd": "Row start {{rowStart}} cannot be greater than row end {{rowEnd}}",
+      "useColumnNumbers": "Use column numbers between 1 and {{cols}} for your grid size",
+      "useRowNumbers": "Use row numbers between 1 and {{rows}} for your grid size",
+      "columnStartShouldBeLessThanEnd": "Ensure the starting column number is less than or equal to the ending column number",
+      "rowStartShouldBeLessThanEnd": "Ensure the starting row number is less than or equal to the ending row number",
+      "positionOccupied": "Position is already occupied by another element",
+      "tryDifferentPosition": "Try specifying a different position for this {{type}} element"
+    }
+  }
+}

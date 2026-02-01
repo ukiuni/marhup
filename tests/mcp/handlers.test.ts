@@ -11,8 +11,12 @@ import {
   getMarhupGuide,
   handleToolCall,
 } from '../../src/mcp-handlers.js';
+import { initI18n } from '../../src/utils/i18n.js';
 
 describe('MCP Tools', () => {
+  beforeEach(async () => {
+    await initI18n('en');
+  });
   describe('getToolDefinitions', () => {
     it('3つのツールを返す', () => {
       const tools = getToolDefinitions();
@@ -102,7 +106,7 @@ describe('MCP Tools', () => {
         });
 
         expect(result.isError).toBe(true);
-        expect(result.content[0].text).toContain('必須パラメータ');
+        expect(result.content[0].text).toContain('Required parameters');
       });
 
       it('outputPathが未指定の場合エラーを返す', async () => {
@@ -111,7 +115,7 @@ describe('MCP Tools', () => {
         });
 
         expect(result.isError).toBe(true);
-        expect(result.content[0].text).toContain('必須パラメータ');
+        expect(result.content[0].text).toContain('Required parameters');
       });
 
       it('存在しない出力ディレクトリを自動作成する', async () => {
@@ -156,7 +160,7 @@ describe('MCP Tools', () => {
         });
 
         expect(result.isError).toBe(true);
-        expect(result.content[0].text).toContain('入力ファイルが見つかりません');
+        expect(result.content[0].text).toContain('Input file not found');
       });
 
       it('inputPathが未指定の場合エラーを返す', async () => {
@@ -167,7 +171,7 @@ describe('MCP Tools', () => {
         });
 
         expect(result.isError).toBe(true);
-        expect(result.content[0].text).toContain('必須パラメータ');
+        expect(result.content[0].text).toContain('Required parameters');
       });
     });
 

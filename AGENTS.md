@@ -115,7 +115,7 @@ interface SlideFrontmatter {
   title?: string;
   grid?: string;      // "12x9" 形式
   layout?: string;    // プリセット名
-  theme?: string;
+  theme?: string | Partial<ThemeConfig>;
 }
 ```
 

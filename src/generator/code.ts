@@ -2,9 +2,9 @@
  * コード要素の生成
  */
 
-import type PptxGenJS from 'pptxgenjs';
-import type { PlacedElement } from '../layout/index';
-import { defaultTheme } from '../theme/index';
+import type { PlacedElement } from '../layout/index.js';
+import type { ThemeConfig, AnimationConfig } from '../types/index.js';
+import type { ISlide } from './presentation.js';
 
 interface Coordinates {
   x: number;
@@ -17,10 +17,12 @@ interface Coordinates {
  * コード要素を追加
  */
 export function addCodeElement(
-  slide: PptxGenJS.Slide,
+  slide: ISlide,
   element: PlacedElement,
   coords: Coordinates,
-  styleProps: Record<string, unknown>
+  styleProps: Record<string, unknown>,
+  theme: ThemeConfig,
+  animation?: AnimationConfig
 ): void {
   const content = element.content as string;
 
@@ -31,7 +33,7 @@ export function addCodeElement(
     w: coords.w,
     h: coords.h,
     fill: { color: '1e293b' },
-    line: { color: '334155', width: 1 },
+    line: '334155',
   });
 
   // コードテキスト
@@ -42,9 +44,13 @@ export function addCodeElement(
     h: coords.h - 0.2,
     fontSize: 14,
     color: 'e2e8f0',
-    fontFace: defaultTheme.fonts.code,
     align: 'left',
     valign: 'top',
     ...styleProps,
+    animation: animation ? {
+      type: animation.type,
+      duration: animation.duration,
+      delay: animation.delay,
+    } : undefined,
   });
 }
