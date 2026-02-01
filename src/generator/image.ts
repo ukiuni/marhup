@@ -3,7 +3,7 @@
  */
 
 import type PptxGenJS from 'pptxgenjs';
-import type { PlacedElement } from '../layout/index.js';
+import type { PlacedElement } from '../layout/index';
 import * as fs from 'fs';
 import * as path from 'path';
 import imageSize from 'image-size';

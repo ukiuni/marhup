@@ -3,17 +3,17 @@
  */
 
 import PptxGenJS from 'pptxgenjs';
-import type { ParsedDocument, GridConfig } from '../types/index.js';
-import { layoutSlide, gridToCoordinates } from '../layout/index.js';
-import type { PlacedElement } from '../layout/index.js';
-import { parseGridString } from '../parser/index.js';
-import { resolveStyleClasses } from '../theme/index.js';
-import { addTextElement, addHeadingElement } from './text.js';
-import { addImageElement } from './image.js';
-import { addTableElement } from './table.js';
-import { addListElement } from './list.js';
-import { addCodeElement } from './code.js';
-import { addMermaidElement } from './mermaid.js';
+import type { ParsedDocument, GridConfig } from '../types/index';
+import { layoutSlide, gridToCoordinates } from '../layout/index';
+import type { PlacedElement } from '../layout/index';
+import { parseGridString } from '../parser/index';
+import { resolveStyleClasses } from '../theme/index';
+import { addTextElement, addHeadingElement } from './text';
+import { addImageElement } from './image';
+import { addTableElement } from './table';
+import { addListElement } from './list';
+import { addCodeElement } from './code';
+import { addMermaidElement } from './mermaid';
 
 // スライドサイズ（インチ）- 16:9
 const SLIDE_SIZE = { width: 10, height: 5.625 };

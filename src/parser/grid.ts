@@ -2,7 +2,7 @@
  * グリッド記法パーサー
  */
 
-import type { GridPosition, StyleOptions } from '../types/index.js';
+import type { GridPosition, StyleOptions } from '../types/index';
 
 // グリッド位置パターン: [1-6, 2-8] または [3, 5]
 const GRID_PATTERN = /\[(\d+)(?:-(\d+))?,\s*(\d+)(?:-(\d+))?\]/;

@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { parseMarkdown } from '../../src/parser/markdown.js';
+import { parseMarkdown } from '../../src/parser/markdown';
 
 describe('Mermaid パーサー', () => {
   it('mermaidコードブロックをmermaidタイプとして認識する', () => {

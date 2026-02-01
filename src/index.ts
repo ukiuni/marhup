@@ -5,9 +5,9 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { parseMarkdown } from './parser/index.js';
-import { generatePptx } from './generator/index.js';
-import type { ConvertOptions, ParsedDocument } from './types/index.js';
+import { parseMarkdown } from './parser/index';
+import { generatePptx } from './generator/index';
+import type { ConvertOptions, ParsedDocument } from './types/index';
 
 /**
  * MarkdownからPPTXを生成

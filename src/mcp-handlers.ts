@@ -5,7 +5,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { mashup, mashupFile } from './index.js';
+import { mashup, mashupFile } from './index';
 
 export interface ToolResult {
   content: { type: string; text: string }[];

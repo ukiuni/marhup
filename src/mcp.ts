@@ -10,7 +10,7 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
-import { getToolDefinitions, handleToolCall } from './mcp-handlers.js';
+import { getToolDefinitions, handleToolCall } from './mcp-handlers';
 
 const server = new Server(
   {

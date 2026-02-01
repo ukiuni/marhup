@@ -11,9 +11,9 @@ import type {
   Slide,
   GridPosition,
   StyleOptions,
-} from '../types/index.js';
-import { parseFrontmatter } from './frontmatter.js';
-import { extractGridAndStyle, parseBlockGridLine } from './grid.js';
+} from '../types/index';
+import { parseFrontmatter } from './frontmatter';
+import { extractGridAndStyle, parseBlockGridLine } from './grid';
 
 /**
  * Markdownをパースしてドキュメント構造に変換

@@ -3,8 +3,8 @@
  */
 
 import type PptxGenJS from 'pptxgenjs';
-import type { PlacedElement } from '../layout/index.js';
-import { defaultTheme } from '../theme/index.js';
+import type { PlacedElement } from '../layout/index';
+import { defaultTheme } from '../theme/index';
 
 interface Coordinates {
   x: number;
