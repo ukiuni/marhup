@@ -5,7 +5,7 @@
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { mashup, mashupFile } from './index';
+import { marhup, marhupFile } from './index';
 
 export interface ToolResult {
   content: { type: string; text: string }[];
@@ -210,7 +210,7 @@ export async function handleToolCall(
           fs.mkdirSync(outputDir, { recursive: true });
         }
 
-        await mashup(markdown, {
+        await marhup(markdown, {
           output: outputPath,
           basePath: basePath || process.cwd(),
         });
@@ -245,7 +245,7 @@ export async function handleToolCall(
           fs.mkdirSync(outputDir, { recursive: true });
         }
 
-        await mashupFile(inputPath, { output: outputPath });
+        await marhupFile(inputPath, { output: outputPath });
 
         return {
           content: [

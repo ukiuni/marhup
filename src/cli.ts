@@ -6,7 +6,7 @@
 import { Command } from 'commander';
 import * as fs from 'fs';
 import * as path from 'path';
-import { mashupFile } from './index.js';
+import { marhupFile } from './index.js';
 
 const program = new Command();
 
@@ -39,7 +39,7 @@ program
       console.log(`📝 ${input} を変換中...`);
 
       // 変換実行
-      await mashupFile(inputPath, {
+      await marhupFile(inputPath, {
         output: outputPath,
         theme: options.theme,
         grid: options.grid,
@@ -55,7 +55,7 @@ program
           if (eventType === 'change') {
             console.log(`\n🔄 変更を検出: ${input}`);
             try {
-              await mashupFile(inputPath, {
+              await marhupFile(inputPath, {
                 output: outputPath,
                 theme: options.theme,
                 grid: options.grid,

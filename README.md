@@ -291,7 +291,7 @@ Options:
 ## プログラムからの使用
 
 ```typescript
-import { mashup } from 'marhup';
+import { marhup } from 'marhup';
 
 const markdown = `
 # タイトル
@@ -299,7 +299,7 @@ const markdown = `
 内容...
 `;
 
-await mashup(markdown, {
+await marhup(markdown, {
   output: 'output.pptx',
   theme: 'default'
 });

@@ -12,7 +12,7 @@ import type { ConvertOptions, ParsedDocument } from './types/index';
 /**
  * MarkdownからPPTXを生成
  */
-export async function mashup(
+export async function marhup(
   markdown: string,
   options: ConvertOptions
 ): Promise<void> {
@@ -26,14 +26,14 @@ export async function mashup(
 /**
  * MarkdownファイルからPPTXを生成
  */
-export async function mashupFile(
+export async function marhupFile(
   inputPath: string,
   options: ConvertOptions
 ): Promise<void> {
   const markdown = fs.readFileSync(inputPath, 'utf-8');
   // 入力ファイルのディレクトリをベースパスとして設定
   const basePath = options.basePath || path.dirname(path.resolve(inputPath));
-  await mashup(markdown, { ...options, basePath });
+  await marhup(markdown, { ...options, basePath });
 }
 
 /**
@@ -55,4 +55,4 @@ export type {
 } from './types/index.js';
 
 // デフォルトエクスポート
-export default mashup;
+export default marhup;
