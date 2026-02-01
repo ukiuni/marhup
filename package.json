@@ -1,6 +1,6 @@
 {
   "name": "marhup",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Markdownからグリッドベースのレイアウトで PowerPoint (PPTX) を生成するCLIツール",
   "type": "module",
   "main": "dist/index.js",
