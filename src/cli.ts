@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * mashup CLI
+ * marhup CLI
  */
 
 import { Command } from 'commander';
@@ -11,7 +11,7 @@ import { mashupFile } from './index.js';
 const program = new Command();
 
 program
-  .name('mashup')
+  .name('marhup')
   .description('Markdownからグリッドベースのレイアウトで PowerPoint (PPTX) を生成')
   .version('0.1.0')
   .argument('<input>', '入力Markdownファイル')

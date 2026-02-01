@@ -72,9 +72,9 @@ export function getToolDefinitions(): ToolDefinition[] {
       },
     },
     {
-      name: 'get_mashup_guide',
+      name: 'get_marhup_guide',
       description:
-        'mashup用のMarkdown記法ガイドを取得します。グリッドレイアウトやスタイル指定の方法を確認できます。',
+        'marhup用のMarkdown記法ガイドを取得します。グリッドレイアウトやスタイル指定の方法を確認できます。',
       inputSchema: {
         type: 'object',
         properties: {},
@@ -87,8 +87,8 @@ export function getToolDefinitions(): ToolDefinition[] {
 /**
  * Markdownテキストから記法ガイドを生成
  */
-export function getMashupGuide(): string {
-  return `# mashup Markdown記法ガイド
+export function getMarhupGuide(): string {
+  return `# marhup Markdown記法ガイド
 
 ## 基本構造
 
@@ -257,12 +257,12 @@ export async function handleToolCall(
         };
       }
 
-      case 'get_mashup_guide': {
+      case 'get_marhup_guide': {
         return {
           content: [
             {
               type: 'text',
-              text: getMashupGuide(),
+              text: getMarhupGuide(),
             },
           ],
         };

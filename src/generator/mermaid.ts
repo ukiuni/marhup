@@ -17,7 +17,7 @@ interface Coordinates {
 }
 
 // 一時ファイル用のディレクトリ
-const TEMP_DIR = path.join(os.tmpdir(), 'mashup-mermaid');
+const TEMP_DIR = path.join(os.tmpdir(), 'marhup-mermaid');
 
 /**
  * 一時ディレクトリを作成

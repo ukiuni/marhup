@@ -1,6 +1,6 @@
-# mashup用Markdown生成ガイド（LLM向け）
+# marhup用Markdown生成ガイド（LLM向け）
 
-このドキュメントは、LLMがmashupコマンドで変換可能なMarkdownを生成するためのガイドです。
+このドキュメントは、LLMがmarhupコマンドで変換可能なMarkdownを生成するためのガイドです。
 
 ## クイックリファレンス
 

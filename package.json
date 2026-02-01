@@ -1,12 +1,12 @@
 {
-  "name": "mashup",
+  "name": "marhup",
   "version": "0.1.4",
   "description": "Markdownからグリッドベースのレイアウトで PowerPoint (PPTX) を生成するCLIツール",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "mashup": "./dist/cli.js",
-    "mashup-mcp": "./dist/mcp.js"
+    "marhup": "./dist/cli.js",
+    "marhup-mcp": "./dist/mcp.js"
   },
   "scripts": {
     "build": "run-s lint build:tsc",

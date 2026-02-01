@@ -32,7 +32,7 @@ export async function generatePptx(
   // プレゼンテーション設定
   pptx.layout = 'LAYOUT_16x9';
   pptx.title = document.globalFrontmatter.title || 'Presentation';
-  pptx.author = 'mashup';
+  pptx.author = 'marhup';
 
   // グローバルグリッド設定
   const globalGridStr = document.globalFrontmatter.grid || '12x9';

@@ -1,8 +1,8 @@
-# mashup 仕様書
+# marhup 仕様書
 
 ## 1. 概要
 
-mashupは、Markdownファイルからグリッドベースのレイアウト指定でPowerPoint (PPTX) を生成するCLIツールです。
+marhupは、Markdownファイルからグリッドベースのレイアウト指定でPowerPoint (PPTX) を生成するCLIツールです。
 
 ### 1.1 主な機能
 
@@ -259,7 +259,7 @@ h = (rowEnd - rowStart + 1) * cellHeight
 ### 6.1 コマンド構文
 
 ```
-mashup [options] <input>
+marhup [options] <input>
 ```
 
 ### 6.2 引数
@@ -283,13 +283,13 @@ mashup [options] <input>
 
 ```bash
 # 基本的な変換
-mashup input.md -o output.pptx
+marhup input.md -o output.pptx
 
 # テーマを指定
-mashup input.md -o output.pptx --theme corporate
+marhup input.md -o output.pptx --theme corporate
 
 # 監視モード
-mashup input.md -o output.pptx --watch
+marhup input.md -o output.pptx --watch
 ```
 
 ## 7. プログラムAPI仕様
@@ -496,4 +496,4 @@ grid: 12x9
 
 ---
 
-*このドキュメントはmashup v0.1.0の仕様を記述しています。*
+*このドキュメントはmarhup v0.1.0の仕様を記述しています。*

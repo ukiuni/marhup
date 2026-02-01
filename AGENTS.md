@@ -1,8 +1,8 @@
-# AGENTS.md - mashup 開発ガイド
+# AGENTS.md - marhup 開発ガイド
 
 ## プロジェクト概要
 
-`mashup` は、Markdownファイルからグリッドベースのレイアウト指定でPowerPoint (PPTX) を生成するCLIツールです。
+`marhup` は、Markdownファイルからグリッドベースのレイアウト指定でPowerPoint (PPTX) を生成するCLIツールです。
 
 ## 技術スタック
 
@@ -19,7 +19,7 @@
 ## ディレクトリ構造
 
 ```
-mashup/
+marhup/
 ├── src/
 │   ├── index.ts           # CLIエントリーポイント
 │   ├── parser/

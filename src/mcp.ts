@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
- * mashup MCP Server
- * Model Context Protocol サーバーとしてmashup機能を提供
+ * marhup MCP Server
+ * Model Context Protocol サーバーとしてmarhup機能を提供
  */
 
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
@@ -14,7 +14,7 @@ import { getToolDefinitions, handleToolCall } from './mcp-handlers';
 
 const server = new Server(
   {
-    name: 'mashup',
+    name: 'marhup',
     version: '0.1.0',
   },
   {
@@ -44,7 +44,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error('mashup MCP server started');
+  console.error('marhup MCP server started');
 }
 
 main().catch((error) => {

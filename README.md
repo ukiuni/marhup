@@ -1,4 +1,4 @@
-# mashup
+# marhup
 
 Markdownからグリッドベースのレイアウトで PowerPoint (PPTX) を生成するCLIツール
 
@@ -13,20 +13,20 @@ Markdownからグリッドベースのレイアウトで PowerPoint (PPTX) を�
 ## インストール
 
 ```bash
-npm install -g mashup
+npm install -g marhup
 ```
 
 ## 基本的な使い方
 
 ```bash
 # 基本的な変換
-mashup input.md -o output.pptx
+marhup input.md -o output.pptx
 
 # テーマを指定
-mashup input.md -o output.pptx --theme corporate
+marhup input.md -o output.pptx --theme corporate
 
 # 監視モード（変更時に自動再生成）
-mashup input.md -o output.pptx --watch
+marhup input.md -o output.pptx --watch
 ```
 
 ## 記法ガイド

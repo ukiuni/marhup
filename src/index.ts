@@ -1,5 +1,5 @@
 /**
- * mashup - Markdown to PowerPoint converter
+ * marhup - Markdown to PowerPoint converter
  * メインエクスポート
  */
 
